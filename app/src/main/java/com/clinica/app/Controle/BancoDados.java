@@ -12,8 +12,11 @@ import com.clinica.app.Modelo.Mensagem;
 import com.clinica.app.Modelo.Pagamento;
 import com.clinica.app.Modelo.Usuario;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class BancoDados extends SQLiteOpenHelper {
 
@@ -135,13 +138,18 @@ public class BancoDados extends SQLiteOpenHelper {
                 "medico", "444.555.666-77", "Dermatologia",
                 "Dermatologista com ênfase em tratamentos estéticos e doenças cutâneas.", null, "feminino", "2024201", "fernandinha");
 
-        inserirUsuarioTeste(db, "Douglas", "douglas", "123",
+        inserirUsuarioTeste(db, "Douglas Nemes", "douglas@email.com", "123",
                 "paciente", "111.222.444-66", "", "", null, "masculino", null, "douglinhas");
+
+        inserirUsuarioTeste(db, "Gustavo Pereira", "gustavo@email.com", "123",
+                "paciente", "000.222.444-66", "", "", null, "masculino", null, "gustavim");
+
+        inserirUsuarioTeste(db, "Diana Souza", "diana@email.com", "123",
+                "paciente", "111.002.444-66", "", "", null, "feminino", null, "diana");
 
         inserirUsuarioTeste(db, "Admin", "admin", "admin",
                 "admin", "000.000.000-00", "", "", null, "masculino", null, "admin");
 
-        // Agenda slots for all doctors
         String[] horarios = {"08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00"};
         String[] datas = {"2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-09",
                 "2026-05-12", "2026-05-13", "2026-05-14"};
@@ -157,6 +165,41 @@ public class BancoDados extends SQLiteOpenHelper {
                 }
             }
         }
+
+        // CONSULTAS
+        db.execSQL("INSERT INTO consultas (paciente_id, medico_id, data, hora, status, pagamento, observacoes) VALUES " +
+                "(5, 1, '2026-05-05', '08:00', 'confirmada', 'pago', 'Dor no peito frequente')," +
+                "(6, 2, '2026-05-06', '09:00', 'pendente', 'pendente', 'Consulta pediátrica de rotina')," +
+                "(7, 3, '2026-05-07', '10:00', 'confirmada', 'pago', 'Lesão no joelho')," +
+                "(5, 4, '2026-05-08', '11:00', 'cancelada', 'reembolsado', 'Consulta dermatológica')," +
+                "(6, 1, '2026-05-09', '14:00', 'confirmada', 'pago', 'Check-up cardiológico');");
+
+        // PAGAMENTOS
+        db.execSQL("INSERT INTO pagamentos (consulta_id, metodo, status, mp_payment_id, mp_preference_id, valor, data_hora) VALUES " +
+                "(1, 'pix', 'aprovado', 'MP123', 'PREF123', 200.0, '2026-05-05 07:50')," +
+                "(2, 'cartao', 'pendente', 'MP124', 'PREF124', 150.0, '2026-05-06 08:50')," +
+                "(3, 'pix', 'aprovado', 'MP125', 'PREF125', 180.0, '2026-05-07 09:50')," +
+                "(4, 'cartao', 'recusado', 'MP126', 'PREF126', 120.0, '2026-05-08 10:50')," +
+                "(5, 'dinheiro', 'aprovado', NULL, NULL, 220.0, '2026-05-09 13:50');");
+
+        // HISTÓRICO MÉDICO
+        db.execSQL("INSERT INTO historico_medico (paciente_id, medico_id, data, diagnostico, observacoes, prescricao) VALUES " +
+                "(5, 1, '2026-05-05', 'Angina leve', 'Paciente relatou dor ao esforço', 'Uso de beta-bloqueadores')," +
+                "(7, 3, '2026-05-07', 'Entorse no joelho', 'Inflamação leve', 'Fisioterapia + anti-inflamatório')," +
+                "(6, 1, '2026-05-09', 'Saudável', 'Check-up normal', 'Manter hábitos saudáveis');");
+
+        // MENSAGENS
+        db.execSQL("INSERT INTO mensagens (remetente_id, destinatario_id, texto, data_hora, lida) VALUES " +
+                "(5, 1, 'Doutor, estou com dor no peito.', '2026-05-04 20:00', 1)," +
+                "(1, 5, 'Vamos investigar na consulta.', '2026-05-04 20:10', 1)," +
+                "(6, 2, 'Minha filha precisa de consulta.', '2026-05-05 18:00', 0)," +
+                "(2, 6, 'Pode agendar para amanhã.', '2026-05-05 18:10', 0);");
+
+        db.execSQL("UPDATE agenda SET disponivel = 0 WHERE medico_id = 1 AND data = '2026-05-05' AND hora = '08:00'");
+        db.execSQL("UPDATE agenda SET disponivel = 0 WHERE medico_id = 2 AND data = '2026-05-06' AND hora = '09:00'");
+        db.execSQL("UPDATE agenda SET disponivel = 0 WHERE medico_id = 3 AND data = '2026-05-07' AND hora = '10:00'");
+        db.execSQL("UPDATE agenda SET disponivel = 0 WHERE medico_id = 4 AND data = '2026-05-08' AND hora = '11:00'");
+        db.execSQL("UPDATE agenda SET disponivel = 0 WHERE medico_id = 1 AND data = '2026-05-09' AND hora = '14:00'");
     }
 
     private void inserirUsuarioTeste(SQLiteDatabase db, String nome, String email,
@@ -176,6 +219,101 @@ public class BancoDados extends SQLiteOpenHelper {
         cv.put("username", username);
         db.insert("usuarios", null, cv);
     }
+
+    public List<String> gerarHorarios(int inicio, int fim) {
+        List<String> lista = new ArrayList<>();
+
+        for (int h = inicio; h < fim; h++) {
+            lista.add(String.format("%02d:00", h));
+        }
+
+        return lista;
+    }
+
+    public List<String> buscarHorasOcupadas(int medicoId, String data) {
+
+        List<String> ocupadas = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor c = db.rawQuery(
+                "SELECT hora FROM agenda WHERE medico_id=? AND data=? AND disponivel=0",
+                new String[]{String.valueOf(medicoId), data}
+        );
+
+        while (c.moveToNext()) {
+            ocupadas.add(c.getString(0));
+        }
+
+        c.close();
+        return ocupadas;
+    }
+
+    public List<String[]> montarSlots(int medicoId, String data) {
+
+        List<String> todos = gerarHorarios(8, 18);
+        List<String> ocupados = buscarHorasOcupadas(medicoId, data);
+
+        List<String[]> slots = new ArrayList<>();
+
+        for (String hora : todos) {
+
+            boolean disponivel = !ocupados.contains(hora);
+
+            slots.add(new String[]{
+                    "0",
+                    hora,
+                    disponivel ? "1" : "0"
+            });
+        }
+
+        return slots;
+    }
+
+    public List<String> gerarDatas(int dias) {
+
+        List<String> lista = new ArrayList<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Calendar cal = Calendar.getInstance();
+
+        for (int i = 0; i < dias; i++) {
+            lista.add(sdf.format(cal.getTime()));
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return lista;
+    }
+
+//    private String gerarDataHojeMaisDias(int dias) {
+//        java.time.LocalDate date = java.time.LocalDate.now().plusDays(dias)
+//        return date.toString(); // YYYY-MM-DD
+//    }
+//    public void gerarAgendaSemanal(int medicoId) {
+//
+//        String[] horarios = {
+//                "08:00", "09:00", "10:00", "11:00",
+//                "14:00", "15:00", "16:00"
+//        };
+//
+//        SQLiteDatabase db = getWritableDatabase();
+//
+//        for (int i = 0; i < 7; i++) {
+//
+//            String data = gerarDataHojeMaisDias(i); // YYYY-MM-DD
+//
+//            for (String hora : horarios) {
+//
+//                ContentValues values = new ContentValues();
+//                values.put("medico_id", medicoId);
+//                values.put("data", data);
+//                values.put("hora", hora);
+//                values.put("disponivel", 1);
+//
+//                db.insert("agenda", null, values);
+//            }
+//        }
+//    }
 
     public long cadastrarUsuario(Usuario u) {
         SQLiteDatabase db = getWritableDatabase();

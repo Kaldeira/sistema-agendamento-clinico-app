@@ -1,6 +1,7 @@
 package com.clinica.app.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -84,7 +85,7 @@ public class PagamentoActivity extends AppCompatActivity {
         cardDinheiro.setOnClickListener(v -> selecionarPagamento(Pagamento.METODO_DINHEIRO));
 
         btnConfirmar.setOnClickListener(v -> iniciarPagamento());
-        btnVoltarInicio.setOnClickListener(v -> finish());
+        btnVoltarInicio.setOnClickListener(v -> this.startActivity(new Intent(this, HistoricoConsultasActivity.class)));
         findViewById(R.id.btnVoltar).setOnClickListener(v -> finish());
     }
 

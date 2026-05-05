@@ -18,8 +18,10 @@ public class AgendaMedicaActivity extends AppCompatActivity {
 
     private ActivityAgendaMedicaBinding binding;
     private BancoDados db;
+
     private int medicoId;
     private String medicoNome;
+
     private List<String> datas;
     private SlotAgendaAdapter slotAdapter;
 
@@ -30,41 +32,59 @@ public class AgendaMedicaActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         db = BancoDados.getInstance(this);
+
         medicoId = getIntent().getIntExtra("medico_id", -1);
         medicoNome = getIntent().getStringExtra("medico_nome");
-
-        //getSupportActionBar().setTitle("Agenda – " + medicoNome);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (medicoId == -1) {
             finish();
             return;
         }
 
+        configurarRecycler();
+        carregarDatas();
+        configurarBotaoVoltar();
+    }
+
+    private void carregarDatas() {
+
         datas = db.buscarDatasComSlots(medicoId);
 
-        if (datas.isEmpty()) {
+        if (datas == null || datas.isEmpty()) {
             Toast.makeText(this, "Nenhum horário disponível.", Toast.LENGTH_SHORT).show();
+            finish();
             return;
         }
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, datas);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerData.setAdapter(dataAdapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                datas
+        );
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerData.setAdapter(adapter);
 
         binding.spinnerData.setOnItemSelectedListener(
                 new android.widget.AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(android.widget.AdapterView<?> parent,
-                                               android.view.View view, int pos, long id) {
-                        carregarSlots(datas.get(pos));
+                                               android.view.View view,
+                                               int position,
+                                               long id) {
+
+                        carregarSlots(datas.get(position));
                     }
 
                     @Override
-                    public void onNothingSelected(android.widget.AdapterView<?> p) {
-                    }
-                });
+                    public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+                }
+        );
+
+        carregarSlots(datas.get(0));
+    }
+
+    private void configurarRecycler() {
 
         slotAdapter = new SlotAgendaAdapter((data, hora) -> {
             Intent intent = new Intent(this, AgendarConsultaActivity.class);
@@ -77,20 +97,20 @@ public class AgendaMedicaActivity extends AppCompatActivity {
 
         binding.rvSlots.setLayoutManager(new GridLayoutManager(this, 3));
         binding.rvSlots.setAdapter(slotAdapter);
-
-        binding.btnVoltar.setOnClickListener(view -> finish());
-
-        carregarSlots(datas.get(0));
     }
 
     private void carregarSlots(String data) {
-        List<String[]> slots = db.buscarSlotsAgenda(medicoId, data);
+        List<String[]> slots = db.montarSlots(medicoId, data);
         slotAdapter.setSlots(slots, data);
+    }
+
+    private void configurarBotaoVoltar() {
+        binding.btnVoltar.setOnClickListener(v -> finish());
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        finish();
         return true;
     }
 }

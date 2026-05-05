@@ -18,9 +18,6 @@
         android:src="@drawable/back_ios"
         app:tint="#FFFFFF" />
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         STATE 1: PAYMENT METHOD SELECTION
-    ══════════════════════════════════════════════════════════════════ -->
     <ScrollView
         android:id="@+id/stateSelecao"
         android:layout_width="match_parent"
@@ -268,9 +265,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         STATE 2: LOADING (creating preference)
-    ══════════════════════════════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/stateCarregando"
         android:layout_width="match_parent"
@@ -293,9 +287,6 @@
             android:layout_marginTop="16dp" />
     </LinearLayout>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         STATE 3: MERCADO PAGO WEBVIEW
-    ══════════════════════════════════════════════════════════════════ -->
     <WebView
         android:id="@+id/webViewMP"
         android:layout_width="match_parent"
@@ -311,9 +302,6 @@
         android:visibility="gone"
         android:layout_alignTop="@id/webViewMP" />
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         STATE 4: RESULT
-    ══════════════════════════════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/stateResultado"
         android:layout_width="match_parent"

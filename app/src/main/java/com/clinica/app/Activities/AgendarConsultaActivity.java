@@ -12,46 +12,80 @@ import com.clinica.app.Controle.SessionManager;
 import com.clinica.app.Modelo.Consulta;
 import com.clinica.app.databinding.ActivityAgendarConsultaBinding;
 
-
 public class AgendarConsultaActivity extends AppCompatActivity {
 
     private static final double VALOR_CONSULTA = 150.00;
 
     private ActivityAgendarConsultaBinding binding;
-    private BancoDados    db;
+    private BancoDados db;
     private SessionManager session;
 
-    private int    medicoId;
-    private String medicoNome, data, hora;
+    private int medicoId;
+    private String medicoNome;
+    private String data;
+    private String hora;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = ActivityAgendarConsultaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().setTitle("Agendar Consulta");
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
-
-        db      = BancoDados.getInstance(this);
+        db = BancoDados.getInstance(this);
         session = new SessionManager(this);
 
-        medicoId   = getIntent().getIntExtra("medico_id", -1);
-        medicoNome = getIntent().getStringExtra("medico_nome");
-        data       = getIntent().getStringExtra("data");
-        hora       = getIntent().getStringExtra("hora");
+        receberDadosIntent();
 
-        binding.tvMedico.setText("Médico: " + medicoNome);
-        binding.tvDataHora.setText("Data: " + data + "  |  Hora: " + hora);
+        if (!validarDados()) {
+            finish();
+            return;
+        }
+
+        preencherTela();
 
         binding.btnAgendar.setOnClickListener(v -> confirmarAgendamento());
         binding.btnVoltar.setOnClickListener(v -> finish());
     }
 
+    private void receberDadosIntent() {
+        Intent intent = getIntent();
+
+        medicoId = intent.getIntExtra("medico_id", -1);
+        medicoNome = intent.getStringExtra("medico_nome");
+        data = intent.getStringExtra("data");
+        hora = intent.getStringExtra("hora");
+    }
+
+    private boolean validarDados() {
+
+        if (medicoId == -1 ||
+                medicoNome == null ||
+                data == null ||
+                hora == null) {
+
+            Toast.makeText(this, "Erro ao carregar dados da consulta", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (session.getUserId() == -1) {
+            Toast.makeText(this, "Usuário não autenticado", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void preencherTela() {
+        binding.tvMedico.setText("Médico: " + medicoNome);
+        binding.tvDataHora.setText("Data: " + data + "  |  Hora: " + hora);
+    }
+
     private void confirmarAgendamento() {
-        String observacoes = binding.etObservacoes.getText().toString().trim();
+
+        String observacoes = binding.etObservacoes.getText()
+                .toString()
+                .trim();
 
         Consulta consulta = new Consulta();
         consulta.setPacienteId(session.getUserId());
@@ -64,8 +98,7 @@ public class AgendarConsultaActivity extends AppCompatActivity {
         long consultaId = db.agendarConsulta(consulta);
 
         if (consultaId <= 0) {
-            Toast.makeText(this, "Erro ao criar consulta. Tente novamente.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Erro ao criar consulta. Tente novamente.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -75,21 +108,23 @@ public class AgendarConsultaActivity extends AppCompatActivity {
         intent.putExtra(PagamentoActivity.EXTRA_CONSULTA_ID, (int) consultaId);
         intent.putExtra(PagamentoActivity.EXTRA_TOTAL, VALOR_CONSULTA);
         intent.putExtra(PagamentoActivity.EXTRA_MEDICO_NOME, medicoNome);
-        startActivity(intent);
 
+        startActivity(intent);
         finish();
     }
 
     private void agendarNotificacao(int consultaId) {
         try {
             NotificacaoReceiver.criarCanalNotificacao(this);
-            // Notification scheduling (existing implementation unchanged)
-        } catch (Exception ignored) {}
+            // lógica de agendamento pode ficar aqui depois
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        finish();
         return true;
     }
 }
