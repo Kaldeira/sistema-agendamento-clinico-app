@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1976D2</color>
+    <color name="colorPrimaryDark">#0D47A1</color>
+    <color name="colorAccent">#03A9F4</color>
+    <color name="colorSlotDisponivel">#43A047</color>
+    <color name="colorSlotOcupado">#E0E0E0</color>
+    <color name="colorMsgEnviada">#BBDEFB</color>
+    <color name="colorMsgRecebida">#F5F5F5</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="textSecondary">#757575</color>
+    <color name="navbar_botao_ativado">#2196F3</color>
+    <color name="navbar_botao_desativado">#666666</color>
+</resources>

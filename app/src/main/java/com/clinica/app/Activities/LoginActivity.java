@@ -1,0 +1,106 @@
+package com.clinica.app.Activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.clinica.app.Controle.BancoDados;
+import com.clinica.app.Controle.SessionManager;
+import com.clinica.app.Modelo.Usuario;
+import com.clinica.app.R;
+import com.clinica.app.Utils.BarraNavHelper;
+import com.clinica.app.databinding.ActivityLoginBinding;
+
+public class LoginActivity extends AppCompatActivity {
+
+    private ActivityLoginBinding binding;
+    private BancoDados    db;
+    private SessionManager session;
+
+    // barra de botoes nav
+    private LinearLayout navHome, navPerfil, navConsultas, navChat, navHistorico;
+    private LinearLayout  navPacientes, navAdmin;
+    private View navLoginBtn;
+    private TextView tvGreeting;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        db      = BancoDados.getInstance(this);
+        session = new SessionManager(this);
+
+        // Already logged in → go home
+        if (session.isLogado()) {
+            goHome();
+            return;
+        }
+
+        bindViews();
+
+        BarraNavHelper.setupBottomNav(
+                this,
+                findViewById(R.id.navHome),
+                findViewById(R.id.navPerfil),
+                findViewById(R.id.navConsultas),
+                findViewById(R.id.navChat),
+                findViewById(R.id.navHistorico),
+                findViewById(R.id.navPacientes),
+                findViewById(R.id.navAdmin),
+                findViewById(R.id.navLogin)
+        );
+
+
+        binding.btnLogin.setOnClickListener(v -> realizarLogin());
+        binding.tvCadastrar.setOnClickListener(v ->
+                startActivity(new Intent(this, CadastroActivity.class)));
+    }
+
+    private void bindViews() {
+        tvGreeting    = findViewById(R.id.tvGreeting);
+        navHome       = findViewById(R.id.navHome);
+        navPerfil     = findViewById(R.id.navPerfil);
+        navConsultas  = findViewById(R.id.navConsultas);
+        navChat       = findViewById(R.id.navChat);
+        navHistorico  = findViewById(R.id.navHistorico);
+        navPacientes  = findViewById(R.id.navPacientes);
+        navAdmin      = findViewById(R.id.navAdmin);
+        navLoginBtn   = findViewById(R.id.navLogin);
+    }
+
+    private void realizarLogin() {
+        String email = binding.etEmail.getText().toString().trim();
+        String senha = binding.etSenha.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(senha)) {
+            Toast.makeText(this, "Preencha todos os campos.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Usuario usuario = db.login(email, senha);
+
+        if (usuario == null) {
+            Toast.makeText(this, "E-mail ou senha incorretos.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        session.criarSessao(usuario.getId(), usuario.getNome(),
+                usuario.getTipo(), usuario.getEmail(), usuario.getFotoPerfil(), usuario.getUsername());
+
+        goHome();
+    }
+
+    private void goHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+}
