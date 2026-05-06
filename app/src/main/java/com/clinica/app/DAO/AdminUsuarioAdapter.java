@@ -1,5 +1,6 @@
 package com.clinica.app.DAO;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
+import com.google.android.material.imageview.ShapeableImageView;
 
+import java.io.File;
 import java.util.List;
 
 public class AdminUsuarioAdapter extends RecyclerView.Adapter<AdminUsuarioAdapter.VH> {
@@ -44,14 +47,34 @@ public class AdminUsuarioAdapter extends RecyclerView.Adapter<AdminUsuarioAdapte
         h.tvInfo.setText(u.getTipo().toUpperCase() + " — " + u.getEmail());
         h.btnEditar.setOnClickListener(v -> onEdit.onEdit(u));
         h.btnDeletar.setOnClickListener(v -> onDelete.onDelete(u));
+
+        if (u.getFotoPerfil() != null && !u.getFotoPerfil().isEmpty()) {
+            File f = new File(u.getFotoPerfil());
+            if (f.exists()) {
+                h.ivFotoUser.setImageURI(Uri.fromFile(f));
+                h.ivFotoUser.setVisibility(View.VISIBLE);
+                h.tvIniciais.setVisibility(View.GONE);
+            } else {
+                showIniciais(h, u);
+            }
+        } else {
+            showIniciais(h, u);
+        }
+    }
+
+    private void showIniciais(VH h, Usuario m) {
+        h.ivFotoUser.setVisibility(View.GONE);
+        h.tvIniciais.setVisibility(View.VISIBLE);
+        h.tvIniciais.setText(m.getIniciais());
     }
 
     @Override
     public int getItemCount() { return lista.size(); }
 
     public static class VH extends RecyclerView.ViewHolder {
-        TextView tvNome, tvInfo;
+        TextView tvNome, tvInfo, tvIniciais;
         Button   btnEditar, btnDeletar;
+        ShapeableImageView ivFotoUser;
 
         public VH(@NonNull View v) {
             super(v);
@@ -59,6 +82,8 @@ public class AdminUsuarioAdapter extends RecyclerView.Adapter<AdminUsuarioAdapte
             tvInfo    = v.findViewById(R.id.tvInfoUsuario);
             btnEditar = v.findViewById(R.id.btnEditar);
             btnDeletar= v.findViewById(R.id.btnDeletar);
+            ivFotoUser = v.findViewById(R.id.ivFotoUser);
+            tvIniciais = v.findViewById(R.id.tvIniciais);
         }
     }
 }

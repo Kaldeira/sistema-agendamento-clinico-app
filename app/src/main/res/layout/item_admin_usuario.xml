@@ -16,16 +16,27 @@
         android:padding="14dp"
         android:gravity="center_vertical">
 
-        <!-- Avatar initials circle -->
+        <!-- Iniciais -->
         <TextView
+            android:id="@+id/tvIniciais"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:gravity="center"
+            android:text="U"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:background="@drawable/circle_primary"
-            android:text="U" />
+            android:background="@drawable/circle_primary" />
+
+        <!-- Foto -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivFotoUser"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:src="@drawable/bg_circle_image"
+            app:shapeAppearanceOverlay="@style/CircleImage"/>
 
         <!-- Info block -->
         <LinearLayout
