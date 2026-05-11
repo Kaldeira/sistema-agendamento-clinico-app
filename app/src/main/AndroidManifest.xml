@@ -17,7 +17,6 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.ClinicaApp">
 
-        <!-- ── Entry point ─────────────────────────────────────── -->
         <activity
             android:name=".Activities.SplashActivity"
             android:exported="true"
@@ -28,67 +27,48 @@
             </intent-filter>
         </activity>
 
-        <!-- NEW: Home screen (replaces direct-login flow) -->
         <activity
             android:name=".Activities.HomeActivity"
             android:exported="false" />
 
-        <!-- Auth -->
         <activity android:name=".Activities.LoginActivity"   android:exported="false" />
         <activity android:name=".Activities.CadastroActivity" android:exported="false" />
 
-        <!-- Shared profile screen -->
         <activity android:name=".Activities.PerfilActivity"  android:exported="false" />
 
-        <!-- Role dashboards (kept for backward-compat internal navigation) -->
         <activity android:name=".Activities.PacienteDashboardActivity" android:exported="false" />
         <activity android:name=".Activities.MedicoDashboardActivity"   android:exported="false" />
         <activity android:name=".Activities.AdminDashboardActivity"    android:exported="false" />
 
-        <!-- Chat -->
         <activity android:name=".Activities.ChatListActivity" android:exported="false" />
         <activity android:name=".Activities.ChatActivity"     android:exported="false" />
 
-        <!-- Appointments -->
         <activity android:name=".Activities.AgendaMedicaActivity"       android:exported="false" />
         <activity android:name=".Activities.AgendarConsultaActivity"    android:exported="false" />
         <activity android:name=".Activities.GerenciarConsultasActivity" android:exported="false" />
         <activity android:name=".Activities.HistoricoConsultasActivity" android:exported="false" />
 
-        <!-- Medical records -->
         <activity android:name=".Activities.HistoricoMedicoActivity"    android:exported="false" />
         <activity android:name=".Activities.RegistrarHistoricoActivity" android:exported="false" />
 
-        <!-- Doctor profile (view-only from home) -->
         <activity android:name=".Activities.PerfilMedicoActivity"       android:exported="false" />
 
-        <!-- Patients list (doctor) -->
-        <activity android:name=".Activities.PacientesActivity"          android:exported="false" />
-
-        <!-- Admin user edit -->
         <activity android:name=".Activities.EditarUsuarioActivity"      android:exported="false" />
 
-        <!-- ── Payment (Mercado Pago Checkout Pro) ────────────── -->
-        <!--
-            PagamentoActivity is exported=true so the OS can deliver
-            deep-link intents from the WebView back to the app.
-            The deep-link scheme "clinicaapp" is registered here.
-        -->
-        <activity
-            android:name=".Activities.PagamentoActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
 
-            <!-- MP back_url deep links -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="clinicaapp" android:host="pagamentoTipo" />
-            </intent-filter>
-        </activity>
+<!--        <activity-->
+<!--            android:name=".Activities.PagamentoActivity"-->
+<!--            android:exported="true"-->
+<!--            android:launchMode="singleTask">-->
 
-        <!-- Notification broadcast receiver -->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+<!--                <data android:scheme="clinicaapp" android:host="pagamentoTipo" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+
         <receiver
             android:name=".Controle.NotificacaoReceiver"
             android:exported="true">
@@ -96,6 +76,24 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".Activities.PagamentoActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="clinicaapp"
+                    android:host="pagamento" />
+            </intent-filter>
+
+        </activity>
 
     </application>
 </manifest>

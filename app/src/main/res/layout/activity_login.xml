@@ -9,6 +9,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/white"
+        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,71 +19,87 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:padding="32dp">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="153dp"
+                android:layout_width="150dp"
                 android:layout_height="150dp"
+                android:layout_marginBottom="12dp"
                 app:srcCompat="@drawable/logo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="70dp"
-                android:layout_marginBottom="5dp"
+                android:text="Entrar"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A2E"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:text="Faça login para continuar"
                 android:textColor="@color/textSecondary"
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/ModernTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Username ou E-mail"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="16dp">
+                android:hint="Email"
+                android:layout_marginBottom="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
+                    style="@style/ModernEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/ModernTextField"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Senha"
-                app:passwordToggleEnabled="true"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="24dp"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
+                app:endIconMode="password_toggle"
+                android:layout_marginBottom="16dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSenha"
+                    style="@style/ModernEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
+                style="@style/ModernButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Entrar"
-                android:textSize="16sp"
-                android:padding="14dp" />
+                android:layout_marginTop="8dp"/>
 
             <TextView
                 android:id="@+id/tvCadastrar"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Não tem conta? Cadastre-se"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginTop="24dp"
-                android:padding="8dp" />
+                android:textAlignment="center"
+                android:textColor="#666666"
+                android:textSize="13sp"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:focusable="true"/>
 
         </LinearLayout>
+
     </ScrollView>
 
     <LinearLayout

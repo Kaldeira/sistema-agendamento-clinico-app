@@ -78,17 +78,18 @@ public class MercadoPagoService {
     public PreferenceResult criarPreferencia(int consultaId, String descricao,
                                              int quantidade, double valor) {
         try {
+            //criaçao do link de pagamento
             JSONObject item = new JSONObject();
-            item.put("id",          String.valueOf(consultaId));
-            item.put("title",       descricao);
-            item.put("quantity",    quantidade);
-            item.put("unit_price",  valor);
-            item.put("currency_id", "BRL");
+            item.put("id",          String.valueOf(consultaId)); // qual pagamento de qual consulta
+            item.put("title",       descricao);  //d escricao do produto
+            item.put("quantity",    quantidade); // quantidade
+            item.put("unit_price",  valor); // valor
+            item.put("currency_id", "BRL"); // moeda
 
             JSONArray items = new JSONArray();
             items.put(item);
 
-            JSONObject backUrls = new JSONObject();
+            JSONObject backUrls = new JSONObject(); // tipo de retorno
             backUrls.put("success", DEEP_LINK_SUCCESS);
             backUrls.put("failure", DEEP_LINK_FAILURE);
             backUrls.put("pending", DEEP_LINK_PENDING);
@@ -97,7 +98,7 @@ public class MercadoPagoService {
             payload.put("items",               items);
             payload.put("back_urls",           backUrls);
             payload.put("auto_return",         "approved");
-            payload.put("external_reference",  String.valueOf(consultaId));
+            payload.put("external_reference",  String.valueOf(consultaId)); // separar por consulta
             payload.put("statement_descriptor","Clinica App");
 
             RequestBody body = RequestBody.create(payload.toString(), JSON);
@@ -147,6 +148,31 @@ public class MercadoPagoService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public String getPaymentID(String consultaId) {
+        try {
+            Request request = new Request.Builder()
+                    .url(BASE_URL + "/v1/payments/search?external_reference=" + consultaId)
+                    .get()
+                    .addHeader("Authorization", "Bearer " + accessToken)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful() || response.body() == null) return null;
+
+                JSONObject json = new JSONObject(response.body().string());
+                JSONArray results = json.getJSONArray("results");
+
+                if (results.length() > 0) {
+                    JSONObject pagamento = results.getJSONObject(0);
+                    return pagamento.getString("id"); // 🔥 payment_id
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void salvarCredenciais(Context context, String accessToken,

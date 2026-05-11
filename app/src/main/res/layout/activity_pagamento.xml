@@ -16,7 +16,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Voltar"
         android:src="@drawable/back_ios"
-        app:tint="#FFFFFF" />
+        app:tint="@color/colorPrimary" />
 
     <ScrollView
         android:id="@+id/stateSelecao"

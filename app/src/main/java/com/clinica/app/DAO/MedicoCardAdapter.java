@@ -1,15 +1,19 @@
 package com.clinica.app.DAO;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.clinica.app.Activities.ChatActivity;
 import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -26,7 +30,6 @@ public class MedicoCardAdapter extends RecyclerView.Adapter<MedicoCardAdapter.Vi
 
     private List<Usuario>          lista    = new ArrayList<>();
     private final OnMedicoClickListener listener;
-
     public MedicoCardAdapter(OnMedicoClickListener listener) {
         this.listener = listener;
     }
@@ -67,6 +70,16 @@ public class MedicoCardAdapter extends RecyclerView.Adapter<MedicoCardAdapter.Vi
         }
 
         h.itemView.setOnClickListener(v -> listener.onClick(m));
+
+       h.btnChat.setOnClickListener(v -> {
+           Context context = v.getContext();
+
+            Intent intent = new Intent(context, ChatActivity.class);
+            intent.putExtra("destinatario_id", m.getId());
+            intent.putExtra("destinatario_nome", m.getNome());
+            intent.putExtra("foto_perfil", m.getFotoPerfil());
+            context.startActivity(intent);
+        });
     }
 
     private void showIniciais(ViewHolder h, Usuario m) {
@@ -80,14 +93,16 @@ public class MedicoCardAdapter extends RecyclerView.Adapter<MedicoCardAdapter.Vi
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView  tvIniciais, tvNome, tvEspecialidade;
+        ImageButton btnChat;
         ShapeableImageView sivFoto;
 
         ViewHolder(View v) {
             super(v);
             sivFoto         = v.findViewById(R.id.ivFotoMedico);
-            tvIniciais     = v.findViewById(R.id.tvIniciaisMedico);
-            tvNome         = v.findViewById(R.id.tvNomeMedico);
-            tvEspecialidade= v.findViewById(R.id.tvEspecialidade);
+            tvIniciais      = v.findViewById(R.id.tvIniciaisMedico);
+            tvNome          = v.findViewById(R.id.tvNomeMedico);
+            tvEspecialidade = v.findViewById(R.id.tvEspecialidade);
+            btnChat         = v.findViewById(R.id.btnChat);
         }
     }
 }

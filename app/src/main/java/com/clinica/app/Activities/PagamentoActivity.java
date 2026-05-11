@@ -76,6 +76,12 @@ public class PagamentoActivity extends AppCompatActivity {
         bindViews();
         configurarWebView();
 
+        Uri data = getIntent().getData();
+
+        if (data != null) {
+            processarRetornoMP(data.toString());
+        }
+
         tvTotalSelecao.setText(String.format(Locale.getDefault(), "R$ %.2f", total));
         if (tvMedicoNome != null && medicoNome != null)
             tvMedicoNome.setText("Pagamento para: " + medicoNome);
@@ -87,6 +93,16 @@ public class PagamentoActivity extends AppCompatActivity {
         btnConfirmar.setOnClickListener(v -> iniciarPagamento());
         btnVoltarInicio.setOnClickListener(v -> this.startActivity(new Intent(this, HistoricoConsultasActivity.class)));
         findViewById(R.id.btnVoltar).setOnClickListener(v -> finish());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent != null && intent.getData() != null) {
+            String url = intent.getData().toString();
+            processarRetornoMP(url);
+        }
     }
 
     private void bindViews() {
@@ -208,10 +224,21 @@ public class PagamentoActivity extends AppCompatActivity {
         });
     }
 
+//    private void abrirCheckoutMP(String url) {
+//        mostrarTela(webViewMP);
+//        progressBar.setVisibility(View.VISIBLE);
+//        webViewMP.loadUrl(url);
+//    }
+
     private void abrirCheckoutMP(String url) {
-        mostrarTela(webViewMP);
-        progressBar.setVisibility(View.VISIBLE);
-        webViewMP.loadUrl(url);
+
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+
+        } catch (Exception e) {
+            Snackbar.make(stateSelecao, "Erro ao abrir pagamento", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void processarRetornoMP(String url) {

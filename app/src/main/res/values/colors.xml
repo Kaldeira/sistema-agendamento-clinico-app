@@ -12,4 +12,9 @@
     <color name="textSecondary">#757575</color>
     <color name="navbar_botao_ativado">#2196F3</color>
     <color name="navbar_botao_desativado">#666666</color>
+    <color name="primary">#2563EB</color> <!-- azul -->
+    <color name="gray_light">#E5E7EB</color>
+    <color name="gray">#9CA3AF</color>
+    <color name="text_main">#111827</color>
+    <color name="background_input">#F9FAFB</color>
 </resources>

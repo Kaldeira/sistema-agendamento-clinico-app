@@ -1,8 +1,13 @@
 package com.clinica.app.Activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         bindViews();
+        botaoCadastro();
 
         BarraNavHelper.setupBottomNav(
                 this,
@@ -60,8 +66,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         binding.btnLogin.setOnClickListener(v -> realizarLogin());
-        binding.tvCadastrar.setOnClickListener(v ->
-                startActivity(new Intent(this, CadastroActivity.class)));
     }
 
     private void bindViews() {
@@ -96,6 +100,27 @@ public class LoginActivity extends AppCompatActivity {
                 usuario.getTipo(), usuario.getEmail(), usuario.getFotoPerfil(), usuario.getUsername());
 
         goHome();
+    }
+
+    private void botaoCadastro()
+    {
+        String texto = "Não tem conta? Cadastre-se";
+
+        SpannableString spannable = new SpannableString(texto);
+
+        int start = texto.indexOf("Cadastre-se");
+        int end = start + "Cadastre-se".length();
+
+        spannable.setSpan(new ForegroundColorSpan(getColor(R.color.colorPrimary)),
+                start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannable.setSpan(new StyleSpan(Typeface.BOLD),
+                start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        binding.tvCadastrar.setText(spannable);
+
+        binding.tvCadastrar.setOnClickListener(v ->
+                startActivity(new Intent(this, CadastroActivity.class)));
     }
 
     private void goHome() {
