@@ -14,7 +14,7 @@ public class SessionManager {
         editor = prefs.edit();
     }
 
-    public void criarSessao(int id, String nome, String tipo, String email, String foto, String username) {
+    public void criarSessao(int id, String nome, String tipo, String email, String foto, String username, String senhaAtual) {
         editor.putBoolean("is_logged", true);
         editor.putInt("user_id", id);
         editor.putString("user_nome", nome);
@@ -22,6 +22,7 @@ public class SessionManager {
         editor.putString("user_email", email);
         editor.putString("user_foto", foto);
         editor.putString("username", username);
+        editor.putString("senhaAtual", senhaAtual);
         editor.apply();
     }
 
@@ -44,6 +45,7 @@ public class SessionManager {
     public String getTipo() {
         return prefs.getString("user_tipo", "");
     }
+    public String getSenha() {return prefs.getString("senhaAtual", "");}
 
     public String getEmail() {
         return prefs.getString("user_email", "");

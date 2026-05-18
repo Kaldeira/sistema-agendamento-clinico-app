@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         session.criarSessao(usuario.getId(), usuario.getNome(),
-                usuario.getTipo(), usuario.getEmail(), usuario.getFotoPerfil(), usuario.getUsername());
+                usuario.getTipo(), usuario.getEmail(), usuario.getFotoPerfil(), usuario.getUsername(), usuario.getSenha());
 
         goHome();
     }

@@ -104,7 +104,7 @@ public class PerfilMedicoActivity extends AppCompatActivity {
 
         if (session.isMedico()) {
             binding.btnVerAgenda.setVisibility(View.GONE);
-            binding.btnChat.setVisibility(View.GONE);
+            //binding.btnChat.setVisibility(View.GONE);
         }
     }
 

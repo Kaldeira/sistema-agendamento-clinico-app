@@ -41,7 +41,7 @@ public class PerfilActivity extends AppCompatActivity {
 
     private ImageView  ivFoto;
     private TextView   tvIniciais;
-    private EditText   etNome, etEmail, etCpf, etEspecialidade, etDescricao, etGenero, etCRM, etUsername;
+    private EditText   etNome, etEmail, etCpf, etEspecialidade, etDescricao, etGenero, etCRM, etUsername, etSenha;
     private TextView   tvTipo;
     private androidx.cardview.widget.CardView layoutMedico;
 
@@ -105,6 +105,7 @@ public class PerfilActivity extends AppCompatActivity {
         etGenero       = findViewById(R.id.etGenero);
         etCRM          = findViewById(R.id.etCRM);
         etUsername     = findViewById(R.id.etUsername);
+        etSenha        = findViewById(R.id.etPassWord);
         layoutMedico   = findViewById(R.id.layoutMedico);
         tvNome         = findViewById(R.id.tvNome);
 
@@ -131,6 +132,7 @@ public class PerfilActivity extends AppCompatActivity {
         tvTipo.setText(tipoLabel(usuario.getTipo()));
         String genero = usuario.getGenero();
         etUsername.setText(usuario.getUsername());
+        etSenha.setText(usuario.getSenha());
 
      //   Log.d("DEBUG", "Genero: " + usuario.getGenero());
 
@@ -165,10 +167,21 @@ public class PerfilActivity extends AppCompatActivity {
     private void salvarPerfil() {
         String nome  = etNome.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
+        String novaSenha = etSenha.getText().toString().trim();
+        String senhaAtual = session.getSenha();
 
         if (nome.isEmpty() || email.isEmpty()) {
             Snackbar.make(etNome, "Nome e e-mail são obrigatórios", Snackbar.LENGTH_SHORT).show();
             return;
+        }
+
+        if (!senhaAtual.equals(novaSenha)) {
+
+            if (novaSenha.isEmpty()) {
+                Snackbar.make(etSenha, "Senha não pode ser vazio!", Snackbar.LENGTH_SHORT).show();
+                return;
+            }
+            usuario.setSenha(novaSenha);
         }
 
         usuario.setNome(nome);
@@ -182,7 +195,7 @@ public class PerfilActivity extends AppCompatActivity {
         if (db.atualizarUsuario(usuario)) {
             // Update session name in case it changed
             session.criarSessao(usuario.getId(), usuario.getNome(),
-                    usuario.getTipo(), usuario.getEmail(), usuario.getFotoPerfil(), usuario.getUsername());
+                    usuario.getTipo(), usuario.getEmail(), usuario.getFotoPerfil(), usuario.getUsername(), usuario.getSenha());
             Snackbar.make(etNome, "✅ Perfil atualizado!", Snackbar.LENGTH_SHORT).show();
         } else {
             Snackbar.make(etNome, "Erro ao salvar. Tente novamente.", Snackbar.LENGTH_SHORT).show();

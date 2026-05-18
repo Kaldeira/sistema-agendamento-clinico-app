@@ -10,6 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.clinica.app.Controle.BancoDados;
 import com.clinica.app.R;
 
+//TO DO:
+//chat entre medicos (feito)
+//notificação de confirmação de consultas
+//filtro de pagamento (medico e tipo de pagamento)
+
 public class SplashActivity extends AppCompatActivity {
 
     private static final long SPLASH_DELAY_MS = 1500;

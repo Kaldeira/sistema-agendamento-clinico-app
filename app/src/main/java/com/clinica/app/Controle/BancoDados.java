@@ -431,6 +431,21 @@ public class BancoDados extends SQLiteOpenHelper {
         return lista;
     }
 
+//    public List<Usuario> buscarPagamentoPorTipo(String filtro) {
+//        SQLiteDatabase db = getReadableDatabase();
+//        List<Pagamento> lista = new ArrayList<>();
+//        String where = "";
+//        String[] args = null;
+//        if (filtro != null && !filtro.isEmpty()) {
+//            where += "metodo LIKE";
+//            args = new String[]{"%" + filtro + "%"};
+//        }
+//        Cursor c = db.query("pagamentos", null, where, args, null, null, "nome");
+//        while (c.moveToNext()) lista.add(cursorToUsuario(c));
+//        c.close();
+//        return lista;
+//    }
+
     public List<Usuario> buscarPacientes() {
         SQLiteDatabase db = getReadableDatabase();
         List<Usuario> lista = new ArrayList<>();

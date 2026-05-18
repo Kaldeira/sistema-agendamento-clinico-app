@@ -168,8 +168,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         layoutMpConfig.setVisibility(android.view.View.GONE);
     }
 
-    // ─── Stats ────────────────────────────────────────────────────────────────
-
     private void carregarStats() {
         int medicos    = db.buscarMedicos(null).size();
         int pacientes  = db.buscarPacientes().size();
