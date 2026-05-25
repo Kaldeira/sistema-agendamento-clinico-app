@@ -55,6 +55,8 @@
 
         <activity android:name=".Activities.EditarUsuarioActivity"      android:exported="false" />
 
+        <activity android:name=".Activities.ProntuarioPacienteActivity"      android:exported="false" />
+
 
 <!--        <activity-->
 <!--            android:name=".Activities.PagamentoActivity"-->

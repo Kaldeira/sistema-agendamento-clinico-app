@@ -23,26 +23,37 @@
         <LinearLayout
             android:id="@+id/layoutHistorico"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
             android:background="@color/white"
-            android:elevation="2dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="12dp"
+            android:gravity="center_vertical"
+            android:elevation="4dp"
             android:visibility="visible">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Selecionar Paciente:"
-                android:textSize="13sp"
-                android:textColor="@color/textSecondary"
-                android:layout_marginBottom="6dp" />
+            <ImageButton
+                android:id="@+id/btnVoltar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/back_ios"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/colorPrimary"
+                android:contentDescription="Voltar" />
 
-            <Spinner
-                android:id="@+id/spinnerPaciente"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_spinner" />
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Selecionar Paciente:"-->
+<!--                android:textSize="13sp"-->
+<!--                android:textColor="@color/textSecondary"-->
+<!--                android:layout_marginBottom="6dp" />-->
+
+<!--            <Spinner-->
+<!--                android:id="@+id/spinnerPaciente"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:background="@drawable/bg_spinner" />-->
         </LinearLayout>
 
         <TextView
@@ -231,7 +242,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Histórico"
+                android:text="Prontuário"
                 android:textColor="@color/navbar_botao_ativado"
                 android:textSize="10sp" />
         </LinearLayout>

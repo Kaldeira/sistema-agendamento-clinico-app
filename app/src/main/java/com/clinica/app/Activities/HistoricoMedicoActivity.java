@@ -27,7 +27,7 @@ public class HistoricoMedicoActivity extends AppCompatActivity {
     private BancoDados db;
     private SessionManager session;
     private List<Usuario> pacientes;
-    private int pacienteSelecionadoId = -1;
+    private int idPaciente;
     private LinearLayout layoutHistorico;
 
     // barra de botoes nav
@@ -62,47 +62,49 @@ public class HistoricoMedicoActivity extends AppCompatActivity {
                 findViewById(R.id.navLogin)
         );
 
+        binding.btnVoltar.setOnClickListener(v->finish());
         binding.rvHistorico.setLayoutManager(new LinearLayoutManager(this));
 
         if (session.isMedico()) {
             layoutHistorico.setVisibility(View.VISIBLE);
             binding.fabNovoRegistro.setVisibility(View.VISIBLE);
-
-            pacientes = db.buscarPacientes();
-            String[] nomes = new String[pacientes.size()];
-            for (int i = 0; i < pacientes.size(); i++) nomes[i] = pacientes.get(i).getNome();
-
-            android.widget.ArrayAdapter<String> spinnerAdapter = new android.widget.ArrayAdapter<>(
-                    this, android.R.layout.simple_spinner_item, nomes);
-            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            binding.spinnerPaciente.setAdapter(spinnerAdapter);
-
-            binding.spinnerPaciente.setOnItemSelectedListener(
-                    new android.widget.AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(android.widget.AdapterView<?> p,
-                                                   View v, int pos, long id) {
-                            pacienteSelecionadoId = pacientes.get(pos).getId();
-                            carregarHistorico(pacienteSelecionadoId);
-                        }
-
-                        @Override
-                        public void onNothingSelected(android.widget.AdapterView<?> p) {
-                        }
-                    });
+            idPaciente = getIntent().getIntExtra("paciente_id", -1);
+            carregarHistorico(idPaciente);
+//            pacientes = db.buscarPacientes();
+//            String[] nomes = new String[pacientes.size()];
+//            for (int i = 0; i < pacientes.size(); i++) nomes[i] = pacientes.get(i).getNome();
+//
+//            android.widget.ArrayAdapter<String> spinnerAdapter = new android.widget.ArrayAdapter<>(
+//                    this, android.R.layout.simple_spinner_item, nomes);
+//            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            binding.spinnerPaciente.setAdapter(spinnerAdapter);
+//
+//            binding.spinnerPaciente.setOnItemSelectedListener(
+//                    new android.widget.AdapterView.OnItemSelectedListener() {
+//                        @Override
+//                        public void onItemSelected(android.widget.AdapterView<?> p,
+//                                                   View v, int pos, long id) {
+//                            pacienteSelecionadoId = pacientes.get(pos).getId();
+//                            carregarHistorico(pacienteSelecionadoId);
+//                        }
+//
+//                        @Override
+//                        public void onNothingSelected(android.widget.AdapterView<?> p) {
+//                        }
+//                    });
 
 
             binding.fabNovoRegistro.setOnClickListener(v -> {
-                if (pacienteSelecionadoId == -1) return;
+                if (idPaciente == -1) return;
                 Intent intent = new Intent(this, RegistrarHistoricoActivity.class);
-                intent.putExtra("paciente_id", pacienteSelecionadoId);
+                intent.putExtra("paciente_id", idPaciente);
                 startActivity(intent);
             });
 
-            if (!pacientes.isEmpty()) {
-                pacienteSelecionadoId = pacientes.get(0).getId();
-                carregarHistorico(pacienteSelecionadoId);
-            }
+//            if (!pacientes.isEmpty()) {
+//                pacienteSelecionadoId = pacientes.get(0).getId();
+//                carregarHistorico(pacienteSelecionadoId);
+//            }
         } else {
             layoutHistorico.setVisibility(View.GONE);
             binding.fabNovoRegistro.setVisibility(View.GONE);
@@ -115,7 +117,7 @@ public class HistoricoMedicoActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (pacienteSelecionadoId != -1) carregarHistorico(pacienteSelecionadoId);
+        if (idPaciente != -1) carregarHistorico(idPaciente);
     }
 
     private void bindViews() {

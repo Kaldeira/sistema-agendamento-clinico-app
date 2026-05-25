@@ -22,7 +22,7 @@
             android:layout_marginEnd="12dp">
 
             <TextView
-                android:id="@+id/tvIniciasUser"
+                android:id="@+id/tvIniciasPaciente"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -33,7 +33,7 @@
                 android:background="@drawable/circle_primary" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/ivFotoMedico"
+                android:id="@+id/ivFotoPaciente"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
@@ -50,7 +50,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvNomeUser"
+                android:id="@+id/tvNomePaciente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Usuario"
@@ -80,7 +80,7 @@
 
 
         <ImageButton
-            android:id="@+id/btnChat"
+            android:id="@+id/botaoChat"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"

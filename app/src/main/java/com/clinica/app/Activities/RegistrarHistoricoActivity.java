@@ -47,6 +47,8 @@ public class RegistrarHistoricoActivity extends AppCompatActivity {
             binding.tvPaciente.setText("Paciente: " + paciente.getNome());
 
         binding.btnSalvar.setOnClickListener(v -> salvarRegistro());
+
+        binding.btnVoltar.setOnClickListener(v-> finish());
     }
 
     private void salvarRegistro() {

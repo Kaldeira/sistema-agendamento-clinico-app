@@ -75,7 +75,7 @@ public class BarraNavHelper {
             navChat.setVisibility(View.VISIBLE);
 
             navHistorico.setOnClickListener(v ->
-                    navegar(activity, HistoricoMedicoActivity.class));
+                    navegar(activity, ProntuarioPacienteActivity.class));
 
             navConsultas.setOnClickListener(v ->
                     navegar(activity, GerenciarConsultasActivity.class));
