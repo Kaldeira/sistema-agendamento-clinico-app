@@ -121,7 +121,7 @@
                         android:layout_marginBottom="12dp"/>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Nome"
@@ -129,12 +129,13 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etNome"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Username"
@@ -142,12 +143,13 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etUsername"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="E-mail"
@@ -155,12 +157,13 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etEmail"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="CPF"
@@ -168,6 +171,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etCpf"
+                            style="@style/ModernEditTextDisabled"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="false"/>
@@ -177,12 +181,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Senha"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         app:passwordToggleEnabled="true"
                         android:layout_marginBottom="12dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPassWord"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword" />
@@ -190,13 +195,14 @@
 
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Genero">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etGenero"
+                            style="@style/ModernEditTextDisabled"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="false"/>
@@ -232,7 +238,7 @@
                         android:layout_marginBottom="12dp"/>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Especialidade"
@@ -240,12 +246,13 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etEspecialidade"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Bio"
@@ -253,6 +260,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDescricao"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="top"
@@ -260,13 +268,14 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="CRM">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etCRM"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -284,6 +293,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSalvar"
+                    style="@style/ModernButton"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:text="Salvar alterações"
@@ -291,10 +301,10 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSair"
+                    style="@style/ModernOutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Sair da conta"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                    android:text="Sair da conta" />
             </LinearLayout>
 
         </LinearLayout>

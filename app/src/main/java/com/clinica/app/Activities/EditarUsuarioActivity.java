@@ -46,14 +46,14 @@ public class EditarUsuarioActivity extends AppCompatActivity {
         preencherCampos();
 
         ArrayAdapter<String> spinner_tipo = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
+                R.layout.item_dropdown,
                 new String[]{"Paciente", "Medico"});
 
         spinner_tipo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipo.setAdapter(spinner_tipo);
 
         ArrayAdapter<String> spinner_genero = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
+                R.layout.item_dropdown,
                 new String[]{"Masculino", "Feminino"});
 
         spinner_genero.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

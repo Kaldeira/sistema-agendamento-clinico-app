@@ -24,6 +24,7 @@ import com.clinica.app.Controle.BancoDados;
 import com.clinica.app.Controle.SessionManager;
 import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
+import com.clinica.app.Utils.MascaraHelper;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;

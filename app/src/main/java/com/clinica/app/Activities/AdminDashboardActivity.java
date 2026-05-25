@@ -3,6 +3,7 @@ package com.clinica.app.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -28,7 +29,9 @@ import com.clinica.app.Utils.BarraNavHelper;
 import com.clinica.app.Utils.MercadoPagoService;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminDashboardActivity extends AppCompatActivity {
@@ -40,6 +43,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private RecyclerView rvUsuarios, rvConsultas, rvPagamentos;
     private android.widget.ScrollView layoutMpConfig;
 
+    private List<Pagamento> listaOriginalPagamentos = new ArrayList<>();
+    private AdminPagamentoAdapter pagamentoAdapter;
+    MaterialAutoCompleteTextView spinnerMetodoPagamento, spinnerStatusPagamento;
+
     // Stats
     private TextView tvStatMedicos, tvStatPacientes, tvStatConsultas, tvStatPagamentos;
 
@@ -50,7 +57,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private TextView    tvMpStatus;
 
     // Barra de botoes nav
-    private LinearLayout navHome, navPerfil, navConsultas, navChat, navHistorico;
+    private LinearLayout navHome, navPerfil, navConsultas, navChat, navHistorico, layoutPagamentos, layoutFiltros;
     private LinearLayout  navPacientes, navAdmin;
     private View navLoginBtn;
     private TextView tvGreeting;
@@ -69,6 +76,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         setupTabs();
         carregarStats();
         carregarUsuarios();
+        filtroPagamento();
 
         BarraNavHelper.setupBottomNav(
                 this,
@@ -124,6 +132,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
         rbProducao    = findViewById(R.id.rbProducao);
         tvMpStatus    = findViewById(R.id.tvMpStatus);
 
+        layoutPagamentos = findViewById(R.id.layoutPagamentos);
+        layoutFiltros = findViewById(R.id.layoutFiltros);
+        spinnerMetodoPagamento = findViewById(R.id.spinnerMetodoPagamento);
+        spinnerStatusPagamento = findViewById(R.id.spinnerStatusPagamento);
 
         rvUsuarios.setLayoutManager(new LinearLayoutManager(this));
         rvConsultas.setLayoutManager(new LinearLayoutManager(this));
@@ -150,10 +162,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 ocultarTodos();
                 switch (tab.getPosition()) {
-                    case 0: rvUsuarios.setVisibility(android.view.View.VISIBLE); carregarUsuarios(); break;
-                    case 1: rvConsultas.setVisibility(android.view.View.VISIBLE); carregarConsultas(); break;
-                    case 2: rvPagamentos.setVisibility(android.view.View.VISIBLE); carregarPagamentos(); break;
-                    case 3: layoutMpConfig.setVisibility(android.view.View.VISIBLE); break;
+                    case 0: rvUsuarios.setVisibility(android.view.View.VISIBLE); carregarUsuarios(); layoutFiltros.setVisibility(View.GONE); break;
+                    case 1: rvConsultas.setVisibility(android.view.View.VISIBLE); carregarConsultas(); layoutFiltros.setVisibility(View.GONE); break;
+                    case 2: rvPagamentos.setVisibility(android.view.View.VISIBLE); carregarPagamentos(); layoutFiltros.setVisibility(View.VISIBLE); break;
+                    case 3: layoutMpConfig.setVisibility(android.view.View.VISIBLE); layoutFiltros.setVisibility(View.GONE); break;
                 }
             }
             @Override public void onTabUnselected(TabLayout.Tab tab) {}
@@ -216,9 +228,124 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void carregarPagamentos() {
-        List<Pagamento> pagamentos = db.buscarTodosPagamentos();
-        AdminPagamentoAdapter adapter = new AdminPagamentoAdapter(pagamentos);
-        rvPagamentos.setAdapter(adapter);
+        layoutPagamentos.setVisibility(View.VISIBLE);
+
+        listaOriginalPagamentos = db.buscarTodosPagamentos();
+
+        pagamentoAdapter = new AdminPagamentoAdapter(listaOriginalPagamentos);
+
+        rvPagamentos.setAdapter(pagamentoAdapter);
+    }
+
+    private void filtrarPagamentos() {
+
+        String metodoSelecionado =
+                spinnerMetodoPagamento.getText().toString();
+
+        String statusSelecionado =
+                spinnerStatusPagamento.getText().toString();
+
+        List<Pagamento> filtrados = new ArrayList<>();
+
+        for (Pagamento p : listaOriginalPagamentos) {
+
+            boolean metodoOk = false;
+            boolean statusOk = false;
+
+            switch (metodoSelecionado) {
+
+                case "Todos":
+                case "":
+                    metodoOk = true;
+                    break;
+
+                case "PIX":
+                    metodoOk = Pagamento.METODO_PIX.equals(p.getMetodo());
+                    break;
+
+                case "Cartão":
+                    metodoOk = Pagamento.METODO_CARTAO.equals(p.getMetodo());
+                    break;
+
+                case "Dinheiro":
+                    metodoOk = Pagamento.METODO_DINHEIRO.equals(p.getMetodo());
+                    break;
+            }
+
+            switch (statusSelecionado) {
+
+                case "Todos":
+                case "":
+                    statusOk = true;
+                    break;
+
+                case "Aprovado":
+                    statusOk = Pagamento.STATUS_APROVADO.equals(p.getStatus());
+                    break;
+
+                case "Pendente":
+                    statusOk = Pagamento.STATUS_PENDENTE.equals(p.getStatus());
+                    break;
+
+                case "Recusado":
+                    statusOk = Pagamento.STATUS_RECUSADO.equals(p.getStatus());
+                    break;
+            }
+
+            if (metodoOk && statusOk) {
+                filtrados.add(p);
+            }
+        }
+
+        pagamentoAdapter = new AdminPagamentoAdapter(filtrados);
+
+        rvPagamentos.setAdapter(pagamentoAdapter);
+    }
+
+    private void filtroPagamento()
+    {
+        MaterialAutoCompleteTextView spinnerMetodo =
+                findViewById(R.id.spinnerMetodoPagamento);
+
+        MaterialAutoCompleteTextView spinnerStatus =
+                findViewById(R.id.spinnerStatusPagamento);
+
+        String[] metodos = {
+                "Todos",
+                "PIX",
+                "Cartão",
+                "Dinheiro"
+        };
+
+        String[] status = {
+                "Todos",
+                "Aprovado",
+                "Pendente",
+                "Recusado"
+        };
+
+        ArrayAdapter<String> metodoAdapter = new ArrayAdapter<>(
+                this,
+                R.layout.item_dropdown,
+                metodos
+        );
+
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(
+                this,
+                R.layout.item_dropdown,
+                status
+        );
+
+        spinnerMetodo.setAdapter(metodoAdapter);
+        spinnerStatus.setAdapter(statusAdapter);
+
+        spinnerMetodoPagamento.setOnItemClickListener((parent, view, position, id) -> {
+            filtrarPagamentos();
+        });
+
+        spinnerStatusPagamento.setOnItemClickListener((parent, view, position, id) -> {
+            filtrarPagamentos();
+        });
     }
 
     private void carregarConfigMP() {

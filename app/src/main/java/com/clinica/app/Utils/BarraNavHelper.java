@@ -25,7 +25,6 @@ public class BarraNavHelper {
 
         SessionManager session = new SessionManager(activity);
 
-        // Reset
         navPerfil.setVisibility(View.GONE);
         navConsultas.setVisibility(View.GONE);
         navChat.setVisibility(View.GONE);
@@ -34,24 +33,24 @@ public class BarraNavHelper {
         navAdmin.setVisibility(View.GONE);
         navLoginBtn.setVisibility(View.GONE);
 
-        // Home sempre
         navHome.setOnClickListener(v ->
-                activity.startActivity(new Intent(activity, HomeActivity.class)));
+                navegar(activity, HomeActivity.class));
 
-        // Não logado
         if (!session.isLogado()) {
+
             navLoginBtn.setVisibility(View.VISIBLE);
+
             navLoginBtn.setOnClickListener(v ->
-                    activity.startActivity(new Intent(activity, LoginActivity.class)));
+                    navegar(activity, LoginActivity.class));
+
             return;
         }
 
-        // Perfil
         navPerfil.setVisibility(View.VISIBLE);
-        navPerfil.setOnClickListener(v ->
-                activity.startActivity(new Intent(activity, PerfilActivity.class)));
 
-        // Paciente
+        navPerfil.setOnClickListener(v ->
+                navegar(activity, PerfilActivity.class));
+
         if (session.isPaciente()) {
 
             navConsultas.setVisibility(View.VISIBLE);
@@ -59,17 +58,16 @@ public class BarraNavHelper {
             navHistorico.setVisibility(View.VISIBLE);
 
             navConsultas.setOnClickListener(v ->
-                    activity.startActivity(new Intent(activity, HistoricoConsultasActivity.class)));
+                    navegar(activity, HistoricoConsultasActivity.class));
 
             navChat.setOnClickListener(v ->
-                    activity.startActivity(new Intent(activity, ChatListActivity.class)));
+                    navegar(activity, ChatListActivity.class));
 
             navHistorico.setOnClickListener(v ->
-                    activity.startActivity(new Intent(activity, HistoricoMedicoActivity.class)));
+                    navegar(activity, HistoricoMedicoActivity.class));
 
         }
 
-        // Médico
         else if (session.isMedico()) {
 
             navHistorico.setVisibility(View.VISIBLE);
@@ -77,21 +75,37 @@ public class BarraNavHelper {
             navChat.setVisibility(View.VISIBLE);
 
             navHistorico.setOnClickListener(v ->
-                    activity.startActivity(new Intent(activity, HistoricoMedicoActivity.class)));
+                    navegar(activity, HistoricoMedicoActivity.class));
 
             navConsultas.setOnClickListener(v ->
-                    activity.startActivity(new Intent(activity, GerenciarConsultasActivity.class)));
+                    navegar(activity, GerenciarConsultasActivity.class));
 
             navChat.setOnClickListener(v ->
-                    activity.startActivity(new Intent(activity, ChatListActivity.class)));
+                    navegar(activity, ChatListActivity.class));
         }
 
-        // Admin
         else if (session.isAdmin()) {
 
             navAdmin.setVisibility(View.VISIBLE);
+
             navAdmin.setOnClickListener(v ->
-                    activity.startActivity(new Intent(activity, AdminDashboardActivity.class)));
+                    navegar(activity, AdminDashboardActivity.class));
         }
+    }
+
+    private static void navegar(Activity activity, Class<?> destino) {
+
+        // se ja estiver na tela, nao vai fazer nada
+        if (activity.getClass().equals(destino)) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, destino);
+        activity.startActivity(intent);
+
+        activity.overridePendingTransition(
+                R.anim.slide_in_right,
+                R.anim.fade_out
+        );
     }
 }

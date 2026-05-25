@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:background="#F5F7FB">
 
-    <!-- TOP BAR -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -28,7 +27,6 @@
             android:contentDescription="Voltar" />
     </LinearLayout>
 
-    <!-- SCROLL -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -39,7 +37,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Role badge -->
             <TextView
                 android:id="@+id/tvTipoUsuario"
                 android:layout_width="wrap_content"
@@ -52,7 +49,6 @@
                 android:paddingVertical="4dp"
                 android:layout_marginBottom="16dp" />
 
-            <!-- CARD INFO -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,11 +75,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Nome completo"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_marginBottom="12dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etNome"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName|textCapWords" />
@@ -93,11 +90,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Username"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_marginBottom="12dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etUsername"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -106,11 +104,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="E-mail"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_marginBottom="12dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etEmail"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress" />
@@ -120,19 +119,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Senha"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         app:passwordToggleEnabled="true"
                         android:layout_marginBottom="12dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etSenha"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/InputDropdownStyle"
+                        style="@style/ModernDropdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Gênero"
@@ -143,12 +143,15 @@
                             android:id="@+id/spinnerGenero"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:popupBackground="@drawable/bg_dropdown"
                             android:textColor="#1A1A2E"
                             android:textSize="14sp"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/InputDropdownStyle"
+                        style="@style/ModernDropdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Tipo de usuário"
@@ -158,6 +161,9 @@
                             android:id="@+id/spinnerTipo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:popupBackground="@drawable/bg_dropdown"
                             android:textColor="#1A1A2E"
                             android:textSize="14sp"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -166,7 +172,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- CARD MÉDICO -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/layoutMedico"
                 android:layout_width="match_parent"
@@ -195,7 +200,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Especialidade"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/ModernTextField"
                         android:layout_marginBottom="12dp">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -210,10 +215,11 @@
                         android:layout_height="wrap_content"
                         android:hint="Descrição / Bio"
                         android:layout_marginBottom="12dp"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        style="@style/ModernTextField">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDescricao"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textMultiLine"
@@ -225,10 +231,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="CRM"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        style="@style/ModernTextField">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etCRM"
+                            style="@style/ModernEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text|textCapWords" />
@@ -237,9 +244,9 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- BOTÕES -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSalvar"
+                style="@style/ModernButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="Salvar alterações"
@@ -247,10 +254,10 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancelar"
+                style="@style/ModernOutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="Cancelar"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 app:strokeColor="@color/colorPrimary" />
 
         </LinearLayout>

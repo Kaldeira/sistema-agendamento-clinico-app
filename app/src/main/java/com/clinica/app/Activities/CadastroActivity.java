@@ -2,7 +2,9 @@ package com.clinica.app.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.clinica.app.Controle.BancoDados;
 import com.clinica.app.R;
 import com.clinica.app.Utils.BarraNavHelper;
+import com.clinica.app.Utils.MascaraHelper;
 import com.clinica.app.databinding.ActivityCadastroBinding;
 import com.clinica.app.Modelo.Usuario;
 
@@ -52,14 +55,14 @@ public class CadastroActivity extends AppCompatActivity {
         );
 
         ArrayAdapter<String> spinner_tipo = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
+                R.layout.item_dropdown,
                 new String[]{"Paciente", "Medico"});
 
         spinner_tipo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerTipo.setAdapter(spinner_tipo);
 
         ArrayAdapter<String> spinner_genero = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
+                R.layout.item_dropdown,
                 new String[]{"Masculino", "Feminino"});
 
         spinner_genero.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -77,6 +80,8 @@ public class CadastroActivity extends AppCompatActivity {
 
         binding.btnCadastrar.setOnClickListener(v -> realizarCadastro());
         binding.tvLogin.setOnClickListener(v -> finish());
+
+        MascaraHelper.CpfMask(binding.etCpf);
     }
 
     private void bindViews() {

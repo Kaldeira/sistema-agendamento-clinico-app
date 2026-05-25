@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:background="#F5F7FB">
 
-    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -98,7 +97,8 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Tabs -->
+
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
@@ -128,13 +128,11 @@
             android:text="⚙️ Mercado Pago" />
     </com.google.android.material.tabs.TabLayout>
 
-    <!-- Tab content -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <!-- Users tab -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvUsuarios"
             android:layout_width="match_parent"
@@ -142,7 +140,6 @@
             android:padding="8dp"
             android:clipToPadding="false" />
 
-        <!-- Appointments tab -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvConsultas"
             android:layout_width="match_parent"
@@ -152,15 +149,76 @@
             android:visibility="gone" />
 
         <!-- Payments tab -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPagamentos"
+        <LinearLayout
+            android:id="@+id/layoutPagamentos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            android:visibility="gone" />
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <!-- MP Config tab -->
+            <!-- FILTROS -->
+            <LinearLayout
+                android:id="@+id/layoutFiltros"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:visibility="gone">
+
+                <!-- Método -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/ModernDropdown"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:hint="Método"
+                    app:endIconMode="dropdown_menu">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/spinnerMetodoPagamento"
+                        style="@style/ModernEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:popupBackground="@drawable/bg_dropdown"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Status -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/ModernDropdown"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:hint="Status"
+                    app:endIconMode="dropdown_menu">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/spinnerStatusPagamento"
+                        style="@style/ModernEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:popupBackground="@drawable/bg_dropdown"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- LISTA -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPagamentos"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:clipToPadding="false"/>
+
+        </LinearLayout>
+
+
         <ScrollView
             android:id="@+id/layoutMpConfig"
             android:layout_width="match_parent"
@@ -280,7 +338,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <!-- Home -->
+
         <LinearLayout
             android:id="@+id/navHome"
             android:layout_width="0dp"
@@ -303,7 +361,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Login -->
+
         <LinearLayout
             android:id="@+id/navLogin"
             android:layout_width="0dp"
@@ -327,7 +385,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Perfil -->
+
         <LinearLayout
             android:id="@+id/navPerfil"
             android:layout_width="0dp"
@@ -351,7 +409,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Chat -->
+
         <LinearLayout
             android:id="@+id/navChat"
             android:layout_width="0dp"
@@ -375,7 +433,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Consultas -->
+
         <LinearLayout
             android:id="@+id/navConsultas"
             android:layout_width="0dp"

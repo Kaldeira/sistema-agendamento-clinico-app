@@ -30,7 +30,7 @@
                 android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/ModernTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -38,13 +38,14 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNome"
+                    style="@style/ModernEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/ModernTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -52,12 +53,13 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etUsername"
+                    style="@style/ModernEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/ModernTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -65,13 +67,14 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
+                    style="@style/ModernEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/ModernTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -80,13 +83,14 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSenha"
+                    style="@style/ModernEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/ModernTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -94,6 +98,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCpf"
+                    style="@style/ModernEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
@@ -101,7 +106,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/InputDropdownStyle"
+                style="@style/ModernDropdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Gênero"
@@ -110,14 +115,18 @@
 
                 <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:id="@+id/spinnerGenero"
+                    style="@style/ModernEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:popupBackground="@drawable/bg_dropdown"
                     android:textColor="#1A1A2E"
                     android:textSize="14sp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/InputDropdownStyle"
+                style="@style/ModernDropdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Tipo de usuário"
@@ -126,8 +135,12 @@
 
                 <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:id="@+id/spinnerTipo"
+                    style="@style/ModernEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:popupBackground="@drawable/bg_dropdown"
                     android:textColor="#1A1A2E"
                     android:textSize="14sp"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -156,7 +169,7 @@
                 android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/ModernTextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -164,13 +177,14 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEspecialidade"
+                        style="@style/ModernEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/ModernTextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -178,6 +192,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDescricao"
+                        style="@style/ModernEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
@@ -185,7 +200,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/ModernTextField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -193,6 +208,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etCRM"
+                        style="@style/ModernEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords" />
@@ -202,6 +218,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCadastrar"
+                style="@style/ModernButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -213,12 +230,14 @@
                 android:id="@+id/tvLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:padding="8dp"
                 android:text="Já tem conta? Faça login"
-                android:textColor="@color/colorPrimary" />
-
+                android:textAlignment="center"
+                android:textColor="#666666"
+                android:textSize="13sp"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_gravity="center"/>
         </LinearLayout>
     </ScrollView>
 
