@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.clinica.app.Controle.BancoDados;
+import com.clinica.app.Controle.FirebaseManager;
 import com.clinica.app.Controle.SessionManager;
 import com.clinica.app.DAO.PacienteCardAdapter;
 import com.clinica.app.Modelo.Usuario;
@@ -28,51 +29,43 @@ public class ProntuarioPacienteActivity extends AppCompatActivity {
 
     ActivityProntuarioPacientesBinding binding;
     PacienteCardAdapter adapter;
-    private BancoDados    db;
+    private FirebaseManager fb;
     private SessionManager session;
 
-    // Barra de botoes nav
     private LinearLayout navHome, navPerfil, navConsultas, navChat, navHistorico;
-    private LinearLayout  navPacientes, navAdmin;
+    private LinearLayout navPacientes, navAdmin;
     private View navLoginBtn;
     private TextView tvGreeting, tvIniciaisUser;
     ShapeableImageView sivFotoPerfil;
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
-     super.onCreate(savedInstanceState);
-     setContentView(R.layout.activity_prontuario_pacientes);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_prontuario_pacientes);
 
-        db      = BancoDados.getInstance(this);
+        fb      = FirebaseManager.getInstance();
         session = new SessionManager(this);
 
         bindViews();
         setupSearch();
         BarraNavHelper.setupBottomNav(this,
-                findViewById(R.id.navHome),
-                findViewById(R.id.navPerfil),
-                findViewById(R.id.navConsultas),
-                findViewById(R.id.navChat),
-                findViewById(R.id.navHistorico),
-                findViewById(R.id.navPacientes),
-                findViewById(R.id.navAdmin),
-                findViewById(R.id.navLogin));
-
+                findViewById(R.id.navHome), findViewById(R.id.navPerfil),
+                findViewById(R.id.navConsultas), findViewById(R.id.navChat),
+                findViewById(R.id.navHistorico), findViewById(R.id.navPacientes),
+                findViewById(R.id.navAdmin), findViewById(R.id.navLogin));
 
         carregarPacientes("");
     }
 
-    private void bindViews()
-    {
-        navHome       = findViewById(R.id.navHome);
-        navPerfil     = findViewById(R.id.navPerfil);
-        navConsultas  = findViewById(R.id.navConsultas);
-        navChat       = findViewById(R.id.navChat);
-        navHistorico  = findViewById(R.id.navHistorico);
-        navPacientes  = findViewById(R.id.navPacientes);
-        navAdmin      = findViewById(R.id.navAdmin);
-        navLoginBtn   = findViewById(R.id.navLogin);
-        sivFotoPerfil = findViewById(R.id.imgUserFoto);
+    private void bindViews() {
+        navHome        = findViewById(R.id.navHome);
+        navPerfil      = findViewById(R.id.navPerfil);
+        navConsultas   = findViewById(R.id.navConsultas);
+        navChat        = findViewById(R.id.navChat);
+        navHistorico   = findViewById(R.id.navHistorico);
+        navPacientes   = findViewById(R.id.navPacientes);
+        navAdmin       = findViewById(R.id.navAdmin);
+        navLoginBtn    = findViewById(R.id.navLogin);
+        sivFotoPerfil  = findViewById(R.id.imgUserFoto);
         tvIniciaisUser = findViewById(R.id.tvIniciaisUser);
 
         RecyclerView rv = findViewById(R.id.rvUsers);
@@ -83,9 +76,8 @@ public class ProntuarioPacienteActivity extends AppCompatActivity {
                 startActivity(new Intent(this, LoginActivity.class));
                 return;
             }
-
             Intent intent = new Intent(this, HistoricoMedicoActivity.class);
-            intent.putExtra("paciente_id", paciente.getId());
+            intent.putExtra("paciente_username", paciente.getUsername());
             startActivity(intent);
         });
 
@@ -104,7 +96,7 @@ public class ProntuarioPacienteActivity extends AppCompatActivity {
     }
 
     private void carregarPacientes(String filtro) {
-        List<Usuario> medicos = db.buscarPacientes(filtro);
-        adapter.setLista(medicos);
+        fb.buscarPacientes(filtro, pacientes ->
+                runOnUiThread(() -> adapter.setLista(pacientes)));
     }
 }

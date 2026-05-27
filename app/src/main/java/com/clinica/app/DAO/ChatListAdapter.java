@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.clinica.app.R;
 import com.clinica.app.Modelo.Usuario;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -23,16 +24,21 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.VH> {
         void onClick(Usuario contato);
     }
 
-    private List<Usuario> lista = new ArrayList<>();
+    private final List<Usuario> lista = new ArrayList<>();
     private final OnContatoClick listener;
 
     public ChatListAdapter(OnContatoClick listener) {
         this.listener = listener;
     }
 
-    public void setLista(List<Usuario> lista) {
-        this.lista = lista;
-        notifyDataSetChanged();
+//    public void setLista(List<Usuario> lista) {
+//        this.lista = lista;
+//        notifyDataSetChanged();
+//    }
+
+    public void addUsuario(Usuario usuario) {
+        lista.add(usuario);
+        notifyItemInserted(lista.size() - 1);
     }
 
     @NonNull
@@ -51,12 +57,17 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.VH> {
                 ? (u.getEspecialidade() != null ? u.getEspecialidade() : "Médico")
                 : "Paciente");
 
-        if (u.getFotoPerfil() != null && !u.getFotoPerfil() .isEmpty()) {
-            File f = new File(u.getFotoPerfil() );
-            if (f.exists()) {
-                h.sivFoto.setImageURI(Uri.fromFile(f));
-                h.sivFoto.setVisibility(View.VISIBLE);
-            }
+        String foto = u.getFotoPerfil();
+        if (foto != null && !foto.isEmpty()) {
+            Glide.with(h.itemView.getContext())
+                    .load(foto)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_menu_person)
+                    .error(R.drawable.ic_menu_person)
+                    .into(h.sivFoto);
+            h.sivFoto.setVisibility(View.VISIBLE);
+        } else {
+            h.sivFoto.setVisibility(View.GONE);
         }
 
         h.itemView.setOnClickListener(v -> listener.onClick(u));

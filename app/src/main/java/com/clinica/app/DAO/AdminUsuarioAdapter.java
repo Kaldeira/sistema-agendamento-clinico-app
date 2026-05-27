@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -49,14 +50,24 @@ public class AdminUsuarioAdapter extends RecyclerView.Adapter<AdminUsuarioAdapte
         h.btnDeletar.setOnClickListener(v -> onDelete.onDelete(u));
 
         if (u.getFotoPerfil() != null && !u.getFotoPerfil().isEmpty()) {
-            File f = new File(u.getFotoPerfil());
-            if (f.exists()) {
-                h.ivFotoUser.setImageURI(Uri.fromFile(f));
-                h.ivFotoUser.setVisibility(View.VISIBLE);
-                h.tvIniciais.setVisibility(View.GONE);
-            } else {
-                showIniciais(h, u);
-            }
+
+            Glide.with(h.itemView.getContext())
+                    .load(u.getFotoPerfil())
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_menu_person)
+                    .error(R.drawable.ic_menu_person)
+                    .into(h.ivFotoUser);
+            h.ivFotoUser.setVisibility(View.VISIBLE);
+            h.tvIniciais.setVisibility(View.GONE);
+
+//            File f = new File(u.getFotoPerfil());
+//            if (f.exists()) {
+//                h.ivFotoUser.setImageURI(Uri.fromFile(f));
+//                h.ivFotoUser.setVisibility(View.VISIBLE);
+//                h.tvIniciais.setVisibility(View.GONE);
+//            } else {
+//                showIniciais(h, u);
+//            }
         } else {
             showIniciais(h, u);
         }

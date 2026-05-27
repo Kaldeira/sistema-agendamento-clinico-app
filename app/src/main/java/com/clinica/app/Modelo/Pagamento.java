@@ -10,7 +10,7 @@ public class Pagamento {
     public static final String STATUS_RECUSADO  = "recusado";
 
     private int    id;
-    private int    consultaId;
+    private String    consultaId;
     private String metodo;
     private String status;
     private String mpPaymentId;    // Mercado Pago payment_id (nullable)
@@ -20,7 +20,7 @@ public class Pagamento {
 
     public Pagamento() {}
 
-    public Pagamento(int consultaId, String metodo, double valor, String dataHora) {
+    public Pagamento(String consultaId, String metodo, double valor, String dataHora) {
         this.consultaId = consultaId;
         this.metodo     = metodo;
         this.valor      = valor;
@@ -33,8 +33,8 @@ public class Pagamento {
     public int    getId()              { return id; }
     public void   setId(int id)        { this.id = id; }
 
-    public int    getConsultaId()                    { return consultaId; }
-    public void   setConsultaId(int consultaId)      { this.consultaId = consultaId; }
+    public String    getConsultaId()                    { return consultaId; }
+    public void   setConsultaId(String consultaId)      { this.consultaId = consultaId; }
 
     public String getMetodo()                        { return metodo; }
     public void   setMetodo(String metodo)           { this.metodo = metodo; }

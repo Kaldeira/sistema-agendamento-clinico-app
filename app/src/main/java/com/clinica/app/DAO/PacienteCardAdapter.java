@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.clinica.app.Activities.ChatActivity;
 import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
@@ -56,14 +57,16 @@ public class PacienteCardAdapter extends RecyclerView.Adapter<PacienteCardAdapte
 
 
         if (m.getFotoPerfil() != null && !m.getFotoPerfil().isEmpty()) {
-            File f = new File(m.getFotoPerfil());
-            if (f.exists()) {
-                h.sivFoto.setImageURI(Uri.fromFile(f));
-                h.sivFoto.setVisibility(View.VISIBLE);
-                h.tvIniciais.setVisibility(View.GONE);
-            } else {
-                showIniciais(h, m);
-            }
+
+            Glide.with(h.itemView.getContext())
+                    .load(m.getFotoPerfil())
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_menu_person)
+                    .error(R.drawable.ic_menu_person)
+                    .into(h.sivFoto);
+
+            h.sivFoto.setVisibility(View.VISIBLE);
+            h.tvIniciais.setVisibility(View.GONE);
         } else {
             showIniciais(h, m);
         }

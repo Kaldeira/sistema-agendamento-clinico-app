@@ -15,9 +15,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.clinica.app.Controle.BancoDados;
+import com.clinica.app.Controle.FirebaseManager;
 import com.clinica.app.Controle.SessionManager;
-import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
 import com.clinica.app.Utils.BarraNavHelper;
 import com.clinica.app.databinding.ActivityLoginBinding;
@@ -25,12 +24,10 @@ import com.clinica.app.databinding.ActivityLoginBinding;
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
-    private BancoDados    db;
     private SessionManager session;
 
-    // barra de botoes nav
     private LinearLayout navHome, navPerfil, navConsultas, navChat, navHistorico;
-    private LinearLayout  navPacientes, navAdmin;
+    private LinearLayout navPacientes, navAdmin;
     private View navLoginBtn;
     private TextView tvGreeting;
 
@@ -40,14 +37,9 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        db      = BancoDados.getInstance(this);
         session = new SessionManager(this);
 
-        // Already logged in → go home
-        if (session.isLogado()) {
-            goHome();
-            return;
-        }
+        if (session.isLogado()) { goHome(); return; }
 
         bindViews();
         botaoCadastro();
@@ -64,61 +56,61 @@ public class LoginActivity extends AppCompatActivity {
                 findViewById(R.id.navLogin)
         );
 
-
         binding.btnLogin.setOnClickListener(v -> realizarLogin());
     }
 
     private void bindViews() {
-        tvGreeting    = findViewById(R.id.tvGreeting);
-        navHome       = findViewById(R.id.navHome);
-        navPerfil     = findViewById(R.id.navPerfil);
-        navConsultas  = findViewById(R.id.navConsultas);
-        navChat       = findViewById(R.id.navChat);
-        navHistorico  = findViewById(R.id.navHistorico);
-        navPacientes  = findViewById(R.id.navPacientes);
-        navAdmin      = findViewById(R.id.navAdmin);
-        navLoginBtn   = findViewById(R.id.navLogin);
+        tvGreeting   = findViewById(R.id.tvGreeting);
+        navHome      = findViewById(R.id.navHome);
+        navPerfil    = findViewById(R.id.navPerfil);
+        navConsultas = findViewById(R.id.navConsultas);
+        navChat      = findViewById(R.id.navChat);
+        navHistorico = findViewById(R.id.navHistorico);
+        navPacientes = findViewById(R.id.navPacientes);
+        navAdmin     = findViewById(R.id.navAdmin);
+        navLoginBtn  = findViewById(R.id.navLogin);
     }
 
     private void realizarLogin() {
-        String email = binding.etEmail.getText().toString().trim();
+        String login = binding.etEmail.getText().toString().trim();
         String senha = binding.etSenha.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(senha)) {
+        if (TextUtils.isEmpty(login) || TextUtils.isEmpty(senha)) {
             Toast.makeText(this, "Preencha todos os campos.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Usuario usuario = db.login(email, senha);
+        FirebaseManager.getInstance().login(login, senha, usuario -> {
+            if (usuario == null) {
+                runOnUiThread(() ->
+                        Toast.makeText(this, "E-mail ou senha incorretos.", Toast.LENGTH_SHORT).show());
+                return;
+            }
 
-        if (usuario == null) {
-            Toast.makeText(this, "E-mail ou senha incorretos.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+            // Usa a sobrecarga sem int para criar sessão com dados do Firebase
+            session.criarSessao(
+                    usuario.getNome(),
+                    usuario.getTipo(),
+                    usuario.getEmail(),
+                    usuario.getFotoPerfil(),
+                    usuario.getUsername(),
+                    usuario.getSenha()
+            );
 
-        session.criarSessao(usuario.getId(), usuario.getNome(),
-                usuario.getTipo(), usuario.getEmail(), usuario.getFotoPerfil(), usuario.getUsername(), usuario.getSenha());
-
-        goHome();
+            runOnUiThread(this::goHome);
+        });
     }
 
-    private void botaoCadastro()
-    {
+    private void botaoCadastro() {
         String texto = "Não tem conta? Cadastre-se";
-
         SpannableString spannable = new SpannableString(texto);
-
         int start = texto.indexOf("Cadastre-se");
-        int end = start + "Cadastre-se".length();
-
+        int end   = start + "Cadastre-se".length();
         spannable.setSpan(new ForegroundColorSpan(getColor(R.color.colorPrimary)),
                 start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         spannable.setSpan(new StyleSpan(Typeface.BOLD),
                 start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         binding.tvCadastrar.setText(spannable);
-
         binding.tvCadastrar.setOnClickListener(v ->
                 startActivity(new Intent(this, CadastroActivity.class)));
     }

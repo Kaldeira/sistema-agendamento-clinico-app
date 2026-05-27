@@ -42,22 +42,14 @@ public class HistoricoConsultaAdapter extends RecyclerView.Adapter<HistoricoCons
     public void onBindViewHolder(@NonNull VH h, int pos) {
         Consulta c = lista.get(pos);
 
-        // ID
-        h.tvConsultaId.setText("Consulta #" + c.getId());
+        h.tvConsultaId.setText("Consulta com " + c.getEspecialidadeMedico());
 
-        // Data
         h.tvDataHora.setText(c.getData() + " às " + c.getHora());
 
-        // Nome
         if (isMedico) {
-            h.tvNomes.setText("Paciente: " +
-                    (c.getNomePaciente() != null ? c.getNomePaciente() : "—"));
+            h.tvNomes.setText("Paciente: " + (c.getNomePaciente() != null ? c.getNomePaciente() : "—"));
         } else {
-            h.tvNomes.setText("Médico: " +
-                    (c.getNomeMedico() != null ? c.getNomeMedico() : "—") +
-                    (c.getEspecialidadeMedico() != null
-                            ? " • " + c.getEspecialidadeMedico()
-                            : ""));
+            h.tvNomes.setText("Médico: " + (c.getNomeMedico() != null ? c.getNomeMedico() : "—"));
         }
 
         Pagamento p = c.getPagamento();

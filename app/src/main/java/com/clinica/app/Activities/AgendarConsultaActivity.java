@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.clinica.app.Controle.BancoDados;
+import com.clinica.app.Controle.FirebaseManager;
 import com.clinica.app.Controle.NotificacaoReceiver;
 import com.clinica.app.Controle.SessionManager;
 import com.clinica.app.Modelo.Consulta;
@@ -17,10 +17,10 @@ public class AgendarConsultaActivity extends AppCompatActivity {
     private static final double VALOR_CONSULTA = 150.00;
 
     private ActivityAgendarConsultaBinding binding;
-    private BancoDados db;
+    private FirebaseManager fb;
     private SessionManager session;
 
-    private int medicoId;
+    private String medicoUsername;
     private String medicoNome;
     private String data;
     private String hora;
@@ -32,7 +32,7 @@ public class AgendarConsultaActivity extends AppCompatActivity {
         binding = ActivityAgendarConsultaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        db = BancoDados.getInstance(this);
+        fb = FirebaseManager.getInstance();
         session = new SessionManager(this);
 
         receberDadosIntent();
@@ -50,25 +50,22 @@ public class AgendarConsultaActivity extends AppCompatActivity {
 
     private void receberDadosIntent() {
         Intent intent = getIntent();
-
-        medicoId = intent.getIntExtra("medico_id", -1);
-        medicoNome = intent.getStringExtra("medico_nome");
-        data = intent.getStringExtra("data");
-        hora = intent.getStringExtra("hora");
+        medicoUsername = intent.getStringExtra("medico_username");
+        medicoNome     = intent.getStringExtra("medico_nome");
+        data           = intent.getStringExtra("data");
+        hora           = intent.getStringExtra("hora");
     }
 
     private boolean validarDados() {
-
-        if (medicoId == -1 ||
-                medicoNome == null ||
-                data == null ||
-                hora == null) {
-
+        if (medicoUsername == null || medicoUsername.isEmpty()
+                || medicoNome == null
+                || data == null
+                || hora == null) {
             Toast.makeText(this, "Erro ao carregar dados da consulta", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (session.getUserId() == -1) {
+        if (session.getUsername() == null || session.getUsername().isEmpty()) {
             Toast.makeText(this, "Usuário não autenticado", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -82,41 +79,40 @@ public class AgendarConsultaActivity extends AppCompatActivity {
     }
 
     private void confirmarAgendamento() {
-
-        String observacoes = binding.etObservacoes.getText()
-                .toString()
-                .trim();
+        String observacoes = binding.etObservacoes.getText().toString().trim();
 
         Consulta consulta = new Consulta();
-        consulta.setPacienteId(session.getUserId());
-        consulta.setMedicoId(medicoId);
+        consulta.setPacienteId(session.getUsername());
+        consulta.setMedicoId(medicoUsername);
         consulta.setData(data);
         consulta.setHora(hora);
         consulta.setPagamentoTipo("pendente");
         consulta.setObservacoes(observacoes);
 
-        long consultaId = db.agendarConsulta(consulta);
+        binding.btnAgendar.setEnabled(false);
 
-        if (consultaId <= 0) {
-            Toast.makeText(this, "Erro ao criar consulta. Tente novamente.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        fb.agendarConsulta(consulta,
+                consultaId -> {
+                    agendarNotificacao(consultaId);
 
-        agendarNotificacao((int) consultaId);
+                    Intent intent = new Intent(this, PagamentoActivity.class);
+                    intent.putExtra(PagamentoActivity.EXTRA_CONSULTA_ID, consultaId);
+                    intent.putExtra(PagamentoActivity.EXTRA_TOTAL, VALOR_CONSULTA);
+                    intent.putExtra(PagamentoActivity.EXTRA_MEDICO_NOME, medicoNome);
 
-        Intent intent = new Intent(this, PagamentoActivity.class);
-        intent.putExtra(PagamentoActivity.EXTRA_CONSULTA_ID, (int) consultaId);
-        intent.putExtra(PagamentoActivity.EXTRA_TOTAL, VALOR_CONSULTA);
-        intent.putExtra(PagamentoActivity.EXTRA_MEDICO_NOME, medicoNome);
-
-        startActivity(intent);
-        finish();
+                    startActivity(intent);
+                    finish();
+                },
+                e -> {
+                    binding.btnAgendar.setEnabled(true);
+                    Toast.makeText(this, "Erro ao criar consulta. Tente novamente.", Toast.LENGTH_SHORT).show();
+                }
+        );
     }
 
-    private void agendarNotificacao(int consultaId) {
+    private void agendarNotificacao(String consultaId) {
         try {
             NotificacaoReceiver.criarCanalNotificacao(this);
-            // lógica de agendamento pode ficar aqui depois
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.clinica.app.Controle.BancoDados;
+import com.clinica.app.Controle.FirebaseManager;
 import com.clinica.app.Modelo.Pagamento;
 import com.clinica.app.R;
 import com.clinica.app.Utils.MercadoPagoService;
@@ -30,6 +30,12 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import android.net.Uri;
+
+import androidx.browser.customtabs.CustomTabColorSchemeParams;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.ContextCompat;
 
 public class PagamentoActivity extends AppCompatActivity {
 
@@ -47,40 +53,35 @@ public class PagamentoActivity extends AppCompatActivity {
     private View checkPix, checkCartao, checkDinheiro;
     private Button btnConfirmar;
 
-    // Resultado views
     private TextView tvResultadoTitulo, tvResultadoMsg, tvResultadoDetalhe;
     private Button   btnVoltarInicio;
 
     private ProgressBar progressBar;
 
-    private int    consultaId;
+    private FirebaseManager fb;
+    private String consultaId;
     private double total;
     private String medicoNome;
     private String metodoSelecionado;
 
-    private BancoDados     db;
-    private ExecutorService executor    = Executors.newSingleThreadExecutor();
-    private Handler         mainHandler = new Handler(Looper.getMainLooper());
-
+    private final ExecutorService executor    = Executors.newSingleThreadExecutor();
+    private final Handler         mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pagamento);
 
-        consultaId = getIntent().getIntExtra(EXTRA_CONSULTA_ID, -1);
+        consultaId = getIntent().getStringExtra(EXTRA_CONSULTA_ID);
         total      = getIntent().getDoubleExtra(EXTRA_TOTAL, 0.0);
         medicoNome = getIntent().getStringExtra(EXTRA_MEDICO_NOME);
-        db         = BancoDados.getInstance(this);
+        fb         = FirebaseManager.getInstance();
 
         bindViews();
         configurarWebView();
 
         Uri data = getIntent().getData();
-
-        if (data != null) {
-            processarRetornoMP(data.toString());
-        }
+        if (data != null) processarRetornoMP(data.toString());
 
         tvTotalSelecao.setText(String.format(Locale.getDefault(), "R$ %.2f", total));
         if (tvMedicoNome != null && medicoNome != null)
@@ -91,18 +92,16 @@ public class PagamentoActivity extends AppCompatActivity {
         cardDinheiro.setOnClickListener(v -> selecionarPagamento(Pagamento.METODO_DINHEIRO));
 
         btnConfirmar.setOnClickListener(v -> iniciarPagamento());
-        btnVoltarInicio.setOnClickListener(v -> this.startActivity(new Intent(this, HistoricoConsultasActivity.class)));
+        btnVoltarInicio.setOnClickListener(v ->
+                startActivity(new Intent(this, HistoricoConsultasActivity.class)));
         findViewById(R.id.btnVoltar).setOnClickListener(v -> finish());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
-        if (intent != null && intent.getData() != null) {
-            String url = intent.getData().toString();
-            processarRetornoMP(url);
-        }
+        if (intent != null && intent.getData() != null)
+            processarRetornoMP(intent.getData().toString());
     }
 
     private void bindViews() {
@@ -120,12 +119,12 @@ public class PagamentoActivity extends AppCompatActivity {
         btnConfirmar       = findViewById(R.id.btnConfirmar);
         btnVoltarInicio    = findViewById(R.id.btnVoltarInicio);
 
-        cardPix     = findViewById(R.id.cardPix);
-        cardCartao  = findViewById(R.id.cardCartao);
-        cardDinheiro= findViewById(R.id.cardDinheiro);
-        checkPix    = findViewById(R.id.checkPix);
-        checkCartao = findViewById(R.id.checkCartao);
-        checkDinheiro = findViewById(R.id.checkDinheiro);
+        cardPix      = findViewById(R.id.cardPix);
+        cardCartao   = findViewById(R.id.cardCartao);
+        cardDinheiro = findViewById(R.id.cardDinheiro);
+        checkPix     = findViewById(R.id.checkPix);
+        checkCartao  = findViewById(R.id.checkCartao);
+        checkDinheiro= findViewById(R.id.checkDinheiro);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -146,27 +145,26 @@ public class PagamentoActivity extends AppCompatActivity {
                 }
                 return false;
             }
-
-            @Override
-            public void onPageStarted(WebView v, String url, android.graphics.Bitmap f) {
+            @Override public void onPageStarted(WebView v, String url, android.graphics.Bitmap f) {
                 progressBar.setVisibility(View.VISIBLE);
             }
-
-            @Override
-            public void onPageFinished(WebView v, String url) {
+            @Override public void onPageFinished(WebView v, String url) {
                 progressBar.setVisibility(View.GONE);
             }
         });
     }
 
-    private void selecionarMetodo(String metodo) {
-        metodoSelecionado = metodo;
-        checkPix.setVisibility(Pagamento.METODO_PIX.equals(metodo)      ? View.VISIBLE : View.GONE);
-        checkCartao.setVisibility(Pagamento.METODO_CARTAO.equals(metodo) ? View.VISIBLE : View.GONE);
-        checkDinheiro.setVisibility(Pagamento.METODO_DINHEIRO.equals(metodo) ? View.VISIBLE : View.GONE);
-        cardPix.setSelected(Pagamento.METODO_PIX.equals(metodo));
-        cardCartao.setSelected(Pagamento.METODO_CARTAO.equals(metodo));
-        cardDinheiro.setSelected(Pagamento.METODO_DINHEIRO.equals(metodo));
+    public void abrirPagamentoMercadoPago(String url) {
+        CustomTabColorSchemeParams params = new CustomTabColorSchemeParams.Builder()
+                .setToolbarColor(ContextCompat.getColor(this, R.color.black))
+                .build();
+
+        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                .setDefaultColorSchemeParams(params)
+                .setShowTitle(true)
+                .build();
+
+        customTabsIntent.launchUrl(this, Uri.parse(url));
     }
 
     private void iniciarPagamento() {
@@ -178,15 +176,17 @@ public class PagamentoActivity extends AppCompatActivity {
 
         switch (metodoSelecionado) {
             case Pagamento.METODO_PIX:
-                // Mocked auto-approval for PIX
+                // PIX: aprovação imediata → marca slot como ocupado
                 registrarPagamento(Pagamento.METODO_PIX, Pagamento.STATUS_APROVADO, null, null);
-                db.atualizarStatusConsulta(consultaId, "confirmada");
+                fb.atualizarStatusPagamentoConsulta(consultaId, "confirmada", ok -> {});
                 exibirResultado("sucesso", null);
                 break;
 
             case Pagamento.METODO_DINHEIRO:
+                // Dinheiro: pendente → slot JÁ foi reservado ao agendar, mas dia não fica "ocupado"
+                // no calendário até confirmação. Mantemos pendente.
                 registrarPagamento(Pagamento.METODO_DINHEIRO, Pagamento.STATUS_PENDENTE, null, null);
-                db.atualizarStatusConsulta(consultaId, "pendente");
+                fb.atualizarStatusConsulta(consultaId, "pendente", ok -> {});
                 exibirResultado("pendente", null);
                 break;
 
@@ -205,45 +205,34 @@ public class PagamentoActivity extends AppCompatActivity {
                     service.criarPreferencia(consultaId, desc, 1, total);
             String url = service.resolverUrlPagamento(result);
 
-            // Save preference ID immediately
-            if (result.sucesso() && result.preferenceId != null) {
+            if (result.sucesso() && result.preferenceId != null)
                 registrarPagamento(Pagamento.METODO_CARTAO, Pagamento.STATUS_PENDENTE,
                         null, result.preferenceId);
-            }
 
             mainHandler.post(() -> {
                 if (result.sucesso() && url != null && !url.isEmpty()) {
-                    abrirCheckoutMP(url);
+                    abrirPagamentoMercadoPago(url);
+                   // abrirCheckoutMP(url);
                 } else {
                     mostrarTela(stateSelecao);
                     String msg = result.erro != null ? result.erro : "URL inválida";
-                    Snackbar.make(stateSelecao, "Erro MP: " + msg,
-                            Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(stateSelecao, "Erro MP: " + msg, Snackbar.LENGTH_LONG).show();
                 }
             });
         });
     }
 
-//    private void abrirCheckoutMP(String url) {
-//        mostrarTela(webViewMP);
-//        progressBar.setVisibility(View.VISIBLE);
-//        webViewMP.loadUrl(url);
-//    }
-
     private void abrirCheckoutMP(String url) {
-
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         } catch (Exception e) {
             Snackbar.make(stateSelecao, "Erro ao abrir pagamento", Snackbar.LENGTH_LONG).show();
         }
     }
 
     private void processarRetornoMP(String url) {
-        Uri uri      = Uri.parse(url);
-        String tipo  = uri.getLastPathSegment();
+        Uri uri     = Uri.parse(url);
+        String tipo = uri.getLastPathSegment();
         String payId = uri.getQueryParameter("payment_id");
 
         String status = "sucesso".equals(tipo) || "approved".equals(tipo)
@@ -252,18 +241,18 @@ public class PagamentoActivity extends AppCompatActivity {
                 ? Pagamento.STATUS_RECUSADO
                 : Pagamento.STATUS_PENDENTE;
 
-        // Atualiza pagamento
-        db.atualizarStatusPagamento(consultaId, status, payId);
+        fb.atualizarStatusPagamento(consultaId, status, payId, ok -> {});
 
-        // Atualiza consulta corretamente
         if (Pagamento.STATUS_APROVADO.equals(status)) {
-            db.atualizarStatusPagamentoConsulta(consultaId, "confirmada");
+            // Pagamento aprovado → confirma consulta (slot já está indisponível desde o agendamento)
+            fb.atualizarStatusPagamentoConsulta(consultaId, "confirmada", ok -> {});
 
         } else if (Pagamento.STATUS_PENDENTE.equals(status)) {
-            db.atualizarStatusPagamentoConsulta(consultaId, "pendente");
+            fb.atualizarStatusPagamentoConsulta(consultaId, "pendente", ok -> {});
 
-        } else if (Pagamento.STATUS_RECUSADO.equals(status)) {
-            db.atualizarStatusPagamentoConsulta(consultaId, "cancelada");
+        } else {
+            // Recusado → cancela consulta E libera o slot de volta
+            fb.atualizarStatusPagamentoConsulta(consultaId, "cancelada", ok -> {});
         }
 
         exibirResultado(tipo, payId);
@@ -271,18 +260,14 @@ public class PagamentoActivity extends AppCompatActivity {
 
     private void exibirResultado(String tipo, String paymentId) {
         mostrarTela(stateResultado);
-
         switch (tipo != null ? tipo : "") {
-            case "sucesso":
-            case "approved":
+            case "sucesso": case "approved":
                 tvResultadoTitulo.setText("✅ Pagamento aprovado!");
                 tvResultadoTitulo.setTextColor(0xFF4CAF50);
                 tvResultadoMsg.setText("Consulta #" + consultaId + " confirmada.");
                 tvResultadoDetalhe.setText(paymentId != null ? "ID: " + paymentId : "");
                 break;
-
-            case "pendente":
-            case "pending":
+            case "pendente": case "pending":
                 tvResultadoTitulo.setText("⏳ Aguardando confirmação");
                 tvResultadoTitulo.setTextColor(0xFFFFC107);
                 tvResultadoMsg.setText(Pagamento.METODO_DINHEIRO.equals(metodoSelecionado)
@@ -290,25 +275,22 @@ public class PagamentoActivity extends AppCompatActivity {
                         : "Aguardando confirmação do banco.");
                 tvResultadoDetalhe.setText("Você será notificado quando aprovado.");
                 break;
-
-            default: // falha / rejected
+            default:
                 tvResultadoTitulo.setText("❌ Pagamento não aprovado");
                 tvResultadoTitulo.setTextColor(0xFFF44336);
                 tvResultadoMsg.setText("O pagamento não foi processado.");
                 tvResultadoDetalhe.setText("Tente novamente ou escolha outro método.");
-                break;
         }
     }
 
     private void registrarPagamento(String metodo, String status,
                                     String mpPaymentId, String mpPreferenceId) {
-        String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                .format(new Date());
+        String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
         Pagamento p = new Pagamento(consultaId, metodo, total, now);
         p.setStatus(status);
         p.setMpPaymentId(mpPaymentId);
         p.setMpPreferenceId(mpPreferenceId);
-        db.registrarPagamento(p);
+        fb.registrarPagamento(p, id -> {}, e -> {});
     }
 
     private void mostrarTela(View tela) {
@@ -318,49 +300,30 @@ public class PagamentoActivity extends AppCompatActivity {
         stateResultado.setVisibility(View.GONE);
         tela.setVisibility(View.VISIBLE);
 
-        // Hide back button inside WebView
         View btnVoltar = findViewById(R.id.btnVoltar);
         if (btnVoltar != null)
             btnVoltar.setVisibility(tela == webViewMP ? View.GONE : View.VISIBLE);
     }
 
     private void selecionarPagamento(String metodo) {
-
-        // TOGGLE
-        if (metodo.equals(metodoSelecionado)) {
-            metodoSelecionado = null;
-        } else {
-            metodoSelecionado = metodo;
-        }
-
+        metodoSelecionado = metodo.equals(metodoSelecionado) ? null : metodo;
         atualizarUISelecao();
     }
 
     private void atualizarUISelecao() {
-
-        atualizarCard(cardPix, checkPix,
-                Pagamento.METODO_PIX.equals(metodoSelecionado));
-
-        atualizarCard(cardCartao, checkCartao,
-                Pagamento.METODO_CARTAO.equals(metodoSelecionado));
-
-        atualizarCard(cardDinheiro, checkDinheiro,
-                Pagamento.METODO_DINHEIRO.equals(metodoSelecionado));
+        atualizarCard(cardPix,     checkPix,     Pagamento.METODO_PIX.equals(metodoSelecionado));
+        atualizarCard(cardCartao,  checkCartao,  Pagamento.METODO_CARTAO.equals(metodoSelecionado));
+        atualizarCard(cardDinheiro,checkDinheiro,Pagamento.METODO_DINHEIRO.equals(metodoSelecionado));
     }
 
     private void atualizarCard(View card, View check, boolean selecionado) {
-
         androidx.cardview.widget.CardView cv = (androidx.cardview.widget.CardView) card;
-
         if (selecionado) {
-            // selecionado
             cv.setCardBackgroundColor(0xFFE3F2FD);
             card.animate().scaleX(1.04f).scaleY(1.04f).setDuration(150);
             card.setAlpha(1f);
             check.setVisibility(View.VISIBLE);
-
         } else {
-            // normal
             cv.setCardBackgroundColor(0xFFFFFFFF);
             card.animate().scaleX(1f).scaleY(1f).setDuration(150);
             card.setAlpha(0.9f);

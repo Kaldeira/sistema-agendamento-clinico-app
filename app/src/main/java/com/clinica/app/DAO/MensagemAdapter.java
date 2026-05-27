@@ -20,9 +20,9 @@ public class MensagemAdapter extends RecyclerView.Adapter<MensagemAdapter.VH> {
     private static final int VIEW_RECEBIDA = 2;
 
     private List<Mensagem> lista = new ArrayList<>();
-    private final int userId;
+    private final String userId;
 
-    public MensagemAdapter(int userId) {
+    public MensagemAdapter(String userId) {
         this.userId = userId;
     }
 
@@ -33,7 +33,7 @@ public class MensagemAdapter extends RecyclerView.Adapter<MensagemAdapter.VH> {
 
     @Override
     public int getItemViewType(int pos) {
-        return lista.get(pos).getRemetenteId() == userId ? VIEW_ENVIADA : VIEW_RECEBIDA;
+        return lista.get(pos).getRemetenteId().equals(userId) ? VIEW_ENVIADA : VIEW_RECEBIDA;
     }
 
     @NonNull

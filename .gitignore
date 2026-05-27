@@ -5,3 +5,5 @@ build/
 local.properties
 .DS_Store
 *.log
+/app/src/main/res/values/keys.xml
+/app/google-services.json

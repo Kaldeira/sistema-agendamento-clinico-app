@@ -1,9 +1,9 @@
 package com.clinica.app.Modelo;
 
 public class HistoricoMedico {
-    private int id, pacienteId, medicoId;
+    private int id;
     private String data, diagnostico, observacoes, prescricao;
-    private String nomeMedico;
+    private String nomeMedico, pacienteId, medicoId;;
 
     public HistoricoMedico() {
     }
@@ -16,19 +16,19 @@ public class HistoricoMedico {
         this.id = id;
     }
 
-    public int getPacienteId() {
+    public String getPacienteId() {
         return pacienteId;
     }
 
-    public void setPacienteId(int pacienteId) {
+    public void setPacienteId(String pacienteId) {
         this.pacienteId = pacienteId;
     }
 
-    public int getMedicoId() {
+    public String getMedicoId() {
         return medicoId;
     }
 
-    public void setMedicoId(int medicoId) {
+    public void setMedicoId(String medicoId) {
         this.medicoId = medicoId;
     }
 

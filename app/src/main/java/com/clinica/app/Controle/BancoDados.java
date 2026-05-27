@@ -560,7 +560,7 @@ public class BancoDados extends SQLiteOpenHelper {
         cv.put("pagamento", c.getPagamentoTipo());
         cv.put("observacoes", c.getObservacoes());
         long id = db.insert("consultas", null, cv);
-        if (id > 0) marcarSlotIndisponivel(db, c.getMedicoId(), c.getData(), c.getHora());
+       // if (id > 0) marcarSlotIndisponivel(db, c.getMedicoId(), c.getData(), c.getHora());
         return id;
     }
 
@@ -570,8 +570,8 @@ public class BancoDados extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("status", novoStatus);
         int rows = db.update("consultas", cv, "id=?", new String[]{String.valueOf(consultaId)});
-        if (rows > 0 && c != null && "cancelada".equals(novoStatus))
-            marcarSlotDisponivel(db, c.getMedicoId(), c.getData(), c.getHora());
+        //if (rows > 0 && c != null && "cancelada".equals(novoStatus))
+            //marcarSlotDisponivel(db, c.getMedicoId(), c.getData(), c.getHora());
         return rows > 0;
     }
 
@@ -611,7 +611,7 @@ public class BancoDados extends SQLiteOpenHelper {
 
         // libera slot se cancelou
         if (rows > 0 && c != null && "cancelada".equals(novoStatus)) {
-            marcarSlotDisponivel(db, c.getMedicoId(), c.getData(), c.getHora());
+          //  marcarSlotDisponivel(db, c.getMedicoId(), c.getData(), c.getHora());
         }
 
         return rows > 0;
@@ -658,9 +658,9 @@ public class BancoDados extends SQLiteOpenHelper {
 
     private Consulta cursorToConsulta(Cursor c) {
         Consulta consulta = new Consulta();
-        consulta.setId(c.getInt(c.getColumnIndexOrThrow("id")));
-        consulta.setPacienteId(c.getInt(c.getColumnIndexOrThrow("paciente_id")));
-        consulta.setMedicoId(c.getInt(c.getColumnIndexOrThrow("medico_id")));
+        //consulta.setId(c.getInt(c.getColumnIndexOrThrow("id")));
+       // consulta.setPacienteId(c.getInt(c.getColumnIndexOrThrow("paciente_id")));
+        //consulta.setMedicoId(c.getInt(c.getColumnIndexOrThrow("medico_id")));
         consulta.setData(c.getString(c.getColumnIndexOrThrow("data")));
         consulta.setHora(c.getString(c.getColumnIndexOrThrow("hora")));
         consulta.setStatus(c.getString(c.getColumnIndexOrThrow("status")));
@@ -717,7 +717,7 @@ public class BancoDados extends SQLiteOpenHelper {
     private Pagamento cursorToPagamento(Cursor c) {
         Pagamento p = new Pagamento();
         p.setId(c.getInt(c.getColumnIndexOrThrow("id")));
-        p.setConsultaId(c.getInt(c.getColumnIndexOrThrow("consulta_id")));
+        //p.setConsultaId(c.getInt(c.getColumnIndexOrThrow("consulta_id")));
         p.setMetodo(c.getString(c.getColumnIndexOrThrow("metodo")));
         p.setStatus(c.getString(c.getColumnIndexOrThrow("status")));
         p.setMpPaymentId(c.getString(c.getColumnIndexOrThrow("mp_payment_id")));
@@ -785,8 +785,8 @@ public class BancoDados extends SQLiteOpenHelper {
     private Mensagem cursorToMensagem(Cursor c) {
         Mensagem m = new Mensagem();
         m.setId(c.getInt(c.getColumnIndexOrThrow("id")));
-        m.setRemetenteId(c.getInt(c.getColumnIndexOrThrow("remetente_id")));
-        m.setDestinatarioId(c.getInt(c.getColumnIndexOrThrow("destinatario_id")));
+//        m.setRemetenteId(c.getInt(c.getColumnIndexOrThrow("remetente_id")));
+//        m.setDestinatarioId(c.getInt(c.getColumnIndexOrThrow("destinatario_id")));
         m.setTexto(c.getString(c.getColumnIndexOrThrow("texto")));
         m.setDataHora(c.getString(c.getColumnIndexOrThrow("data_hora")));
         m.setLida(c.getInt(c.getColumnIndexOrThrow("lida")) == 1);
@@ -818,8 +818,8 @@ public class BancoDados extends SQLiteOpenHelper {
     private HistoricoMedico cursorToHistorico(Cursor c) {
         HistoricoMedico h = new HistoricoMedico();
         h.setId(c.getInt(c.getColumnIndexOrThrow("id")));
-        h.setPacienteId(c.getInt(c.getColumnIndexOrThrow("paciente_id")));
-        h.setMedicoId(c.getInt(c.getColumnIndexOrThrow("medico_id")));
+//        h.setPacienteId(c.getInt(c.getColumnIndexOrThrow("paciente_id")));
+//        h.setMedicoId(c.getInt(c.getColumnIndexOrThrow("medico_id")));
         h.setData(c.getString(c.getColumnIndexOrThrow("data")));
         h.setDiagnostico(c.getString(c.getColumnIndexOrThrow("diagnostico")));
         h.setObservacoes(c.getString(c.getColumnIndexOrThrow("observacoes")));

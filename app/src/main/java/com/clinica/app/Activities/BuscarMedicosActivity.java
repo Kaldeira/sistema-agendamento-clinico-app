@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.clinica.app.Controle.FirebaseManager;
 import com.clinica.app.DAO.MedicoAdapter;
 import com.clinica.app.Controle.BancoDados;
 import com.clinica.app.databinding.ActivityBuscarMedicosBinding;
@@ -19,7 +20,7 @@ import java.util.List;
 public class BuscarMedicosActivity extends AppCompatActivity {
 
     private ActivityBuscarMedicosBinding binding;
-    private BancoDados db;
+    private FirebaseManager fb;
     private MedicoAdapter adapter;
 
     @Override
@@ -28,15 +29,12 @@ public class BuscarMedicosActivity extends AppCompatActivity {
         binding = ActivityBuscarMedicosBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        getSupportActionBar().setTitle("Buscar Médicos");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        db = BancoDados.getInstance(this);
+        fb = FirebaseManager.getInstance();
 
         binding.rvMedicos.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MedicoAdapter(medico -> {
             Intent intent = new Intent(this, PerfilMedicoActivity.class);
-            intent.putExtra("medico_id", medico.getId());
+            intent.putExtra("medico_username", medico.getUsername());
             startActivity(intent);
         });
         binding.rvMedicos.setAdapter(adapter);
@@ -44,29 +42,19 @@ public class BuscarMedicosActivity extends AppCompatActivity {
         carregarMedicos("");
 
         binding.etBusca.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 carregarMedicos(s.toString());
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
+            @Override public void afterTextChanged(Editable s) {}
         });
     }
 
     private void carregarMedicos(String filtro) {
-        List<Usuario> medicos = db.buscarMedicos(filtro);
-        adapter.setLista(medicos);
+        fb.buscarMedicos(filtro, medicos ->
+                runOnUiThread(() -> adapter.setLista(medicos)));
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
+    public boolean onSupportNavigateUp() { onBackPressed(); return true; }
 }

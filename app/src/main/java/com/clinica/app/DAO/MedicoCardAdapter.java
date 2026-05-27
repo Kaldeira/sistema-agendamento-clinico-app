@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.clinica.app.Activities.ChatActivity;
 import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
@@ -30,8 +31,10 @@ public class MedicoCardAdapter extends RecyclerView.Adapter<MedicoCardAdapter.Vi
 
     private List<Usuario>          lista    = new ArrayList<>();
     private final OnMedicoClickListener listener;
-    public MedicoCardAdapter(OnMedicoClickListener listener) {
+    private final Context context;
+    public MedicoCardAdapter(Context context, OnMedicoClickListener listener) {
         this.listener = listener;
+        this.context = context;
     }
 
     public void setLista(List<Usuario> lista) {
@@ -57,14 +60,25 @@ public class MedicoCardAdapter extends RecyclerView.Adapter<MedicoCardAdapter.Vi
 
 
         if (m.getFotoPerfil() != null && !m.getFotoPerfil().isEmpty()) {
-            File f = new File(m.getFotoPerfil());
-            if (f.exists()) {
-                h.sivFoto.setImageURI(Uri.fromFile(f));
-                h.sivFoto.setVisibility(View.VISIBLE);
-                h.tvIniciais.setVisibility(View.GONE);
-            } else {
-                showIniciais(h, m);
-            }
+
+            Glide.with(context)
+                    .load(m.getFotoPerfil())
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_menu_person)
+                    .error(R.drawable.ic_menu_person)
+                    .into(h.sivFoto);
+
+            h.sivFoto.setVisibility(View.VISIBLE);
+            h.tvIniciais.setVisibility(View.GONE);
+
+//            File f = new File(m.getFotoPerfil());
+//            if (f.exists()) {
+//                h.sivFoto.setImageURI(Uri.fromFile(f));
+//                h.sivFoto.setVisibility(View.VISIBLE);
+//                h.tvIniciais.setVisibility(View.GONE);
+//            } else {
+//                showIniciais(h, m);
+//            }
         } else {
             showIniciais(h, m);
         }
@@ -76,6 +90,7 @@ public class MedicoCardAdapter extends RecyclerView.Adapter<MedicoCardAdapter.Vi
 
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("destinatario_id", m.getId());
+            intent.putExtra("destinatario_username", m.getUsername());
             intent.putExtra("destinatario_nome", m.getNome());
             intent.putExtra("foto_perfil", m.getFotoPerfil());
             context.startActivity(intent);

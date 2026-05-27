@@ -1,8 +1,9 @@
 package com.clinica.app.Modelo;
 
 public class Mensagem {
-    private int id, remetenteId, destinatarioId;
-    private String texto, dataHora;
+    private int id;
+
+    private String texto, dataHora, remetenteId, destinatarioId;;
     private boolean lida;
 
     public Mensagem() {
@@ -16,19 +17,19 @@ public class Mensagem {
         this.id = id;
     }
 
-    public int getRemetenteId() {
+    public String getRemetenteId() {
         return remetenteId;
     }
 
-    public void setRemetenteId(int remetenteId) {
+    public void setRemetenteId(String remetenteId) {
         this.remetenteId = remetenteId;
     }
 
-    public int getDestinatarioId() {
+    public String getDestinatarioId() {
         return destinatarioId;
     }
 
-    public void setDestinatarioId(int destinatarioId) {
+    public void setDestinatarioId(String destinatarioId) {
         this.destinatarioId = destinatarioId;
     }
 

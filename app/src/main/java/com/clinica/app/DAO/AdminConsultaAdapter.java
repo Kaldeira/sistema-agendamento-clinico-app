@@ -1,6 +1,5 @@
 package com.clinica.app.DAO;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,21 +8,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.clinica.app.Controle.BancoDados;
 import com.clinica.app.Modelo.Consulta;
-import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminConsultaAdapter extends RecyclerView.Adapter<AdminConsultaAdapter.VH> {
 
-    private final Context        ctx;
-    private final List<Consulta> lista;
+    private List<Consulta> lista = new ArrayList<>();
 
-    public AdminConsultaAdapter(Context ctx, List<Consulta> lista) {
-        this.ctx   = ctx;
-        this.lista = lista;
+    public void setLista(List<Consulta> lista) {
+        this.lista = lista != null ? lista : new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -38,16 +35,12 @@ public class AdminConsultaAdapter extends RecyclerView.Adapter<AdminConsultaAdap
     public void onBindViewHolder(@NonNull VH h, int pos) {
         Consulta c = lista.get(pos);
 
-        BancoDados db = BancoDados.getInstance(ctx);
-        Usuario paciente = db.buscarUsuarioPorId(c.getPacienteId());
-        Usuario medico   = db.buscarUsuarioPorId(c.getMedicoId());
-
         h.tvId.setText("Consulta #" + c.getId());
         h.tvData.setText(c.getData() + " às " + c.getHora());
         h.tvNomes.setText(
-                (paciente != null ? paciente.getNome() : "Paciente #" + c.getPacienteId())
-                + " → "
-                + (medico != null ? medico.getNome() : "Médico #" + c.getMedicoId())
+                (c.getNomePaciente() != null ? c.getNomePaciente() : c.getPacienteId())
+                        + " → "
+                        + (c.getNomeMedico() != null ? c.getNomeMedico() : c.getMedicoId())
         );
         h.tvStatus.setText(c.getStatus().toUpperCase());
 

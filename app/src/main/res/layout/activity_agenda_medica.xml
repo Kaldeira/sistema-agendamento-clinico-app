@@ -27,116 +27,219 @@
             android:contentDescription="Voltar" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tvTitulo"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Agendar Consulta"
+            android:layout_weight="1"
+            android:text="Agenda"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#1A1A2E"
             android:layout_marginStart="12dp"/>
     </LinearLayout>
 
-    <!-- HEADER -->
-    <TextView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Agendar Consulta"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="#1A1A2E"
-        android:padding="16dp"/>
-
-    <!-- CARD DATA -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="12dp"
-        app:cardCornerRadius="14dp"
-        app:cardElevation="2dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="14dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Selecione a data"
-                android:textSize="13sp"
-                android:textColor="#888888"/>
-
-            <Spinner
-                android:id="@+id/spinnerData"
+            <!-- CALENDÁRIO -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_spinner"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <!-- Navegação mês -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageButton
+                            android:id="@+id/btnMesAnterior"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/back_ios"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            app:tint="@color/colorPrimary"
+                            android:contentDescription="Mês anterior"/>
+
+                        <TextView
+                            android:id="@+id/tvMesAno"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#1A1A2E"/>
+
+                        <ImageButton
+                            android:id="@+id/btnProximoMes"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/back_ios"
+                            android:rotation="180"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            app:tint="@color/colorPrimary"
+                            android:contentDescription="Próximo mês"/>
+                    </LinearLayout>
+
+                    <!-- Dias da semana -->
+                    <GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="7"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView android:layout_width="0dp" android:layout_columnWeight="1"
+                            android:gravity="center" android:text="Dom" android:textSize="11sp"
+                            android:textColor="#888" android:textStyle="bold"/>
+                        <TextView android:layout_width="0dp" android:layout_columnWeight="1"
+                            android:gravity="center" android:text="Seg" android:textSize="11sp"
+                            android:textColor="#888" android:textStyle="bold"/>
+                        <TextView android:layout_width="0dp" android:layout_columnWeight="1"
+                            android:gravity="center" android:text="Ter" android:textSize="11sp"
+                            android:textColor="#888" android:textStyle="bold"/>
+                        <TextView android:layout_width="0dp" android:layout_columnWeight="1"
+                            android:gravity="center" android:text="Qua" android:textSize="11sp"
+                            android:textColor="#888" android:textStyle="bold"/>
+                        <TextView android:layout_width="0dp" android:layout_columnWeight="1"
+                            android:gravity="center" android:text="Qui" android:textSize="11sp"
+                            android:textColor="#888" android:textStyle="bold"/>
+                        <TextView android:layout_width="0dp" android:layout_columnWeight="1"
+                            android:gravity="center" android:text="Sex" android:textSize="11sp"
+                            android:textColor="#888" android:textStyle="bold"/>
+                        <TextView android:layout_width="0dp" android:layout_columnWeight="1"
+                            android:gravity="center" android:text="Sáb" android:textSize="11sp"
+                            android:textColor="#888" android:textStyle="bold"/>
+                    </GridLayout>
+
+                    <!-- Grade dos dias (preenchida dinamicamente) -->
+                    <GridLayout
+                        android:id="@+id/gridCalendario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="7"
+                        android:useDefaultMargins="false"/>
+
+                    <!-- Legenda -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp">
+
+                        <View
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="#4CAF50"
+                            android:layout_marginEnd="4dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Disponível" android:textSize="11sp" android:textColor="#555"
+                            android:layout_marginEnd="16dp"/>
+
+                        <View
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="#F44336"
+                            android:layout_marginEnd="4dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Ocupado" android:textSize="11sp" android:textColor="#555"
+                            android:layout_marginEnd="16dp"/>
+
+                        <View
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="#CCCCCC"
+                            android:layout_marginEnd="4dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Sem agenda" android:textSize="11sp" android:textColor="#555"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- DATA SELECIONADA -->
+            <TextView
+                android:id="@+id/tvDataSelecionada"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="8dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A2E"
+                android:visibility="gone"/>
+
+            <!-- LEGENDA HORÁRIOS -->
+            <LinearLayout
+                android:id="@+id/layoutLegendaHorarios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_circle"
+                    app:tint="#4CAF50"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text=" Livre" android:textSize="11sp" android:textColor="#777"
+                    android:layout_marginEnd="12dp"/>
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_circle"
+                    app:tint="#777777"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text=" Ocupado" android:textSize="11sp" android:textColor="#777"/>
+            </LinearLayout>
+
+            <!-- HORÁRIOS -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSlots"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingBottom="16dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone"/>
+
+            <!-- NENHUM HORÁRIO -->
+            <TextView
+                android:id="@+id/tvSemHorarios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selecione um dia disponível para ver os horários"
+                android:gravity="center"
+                android:textColor="#999"
+                android:textSize="13sp"
+                android:padding="24dp"
+                android:visibility="visible"/>
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- LEGENDA -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Horários"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="#1A1A2E"
-            android:layout_weight="1"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:src="@drawable/ic_circle"
-                app:tint="#4CAF50"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Livre"
-                android:textSize="11sp"
-                android:textColor="#777777"
-                android:layout_marginEnd="12dp"/>
-
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:src="@drawable/ic_circle"
-                app:tint="#777777"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ocupado"
-                android:textSize="11sp"
-                android:textColor="#777777"/>
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- LISTA -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSlots"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingHorizontal="12dp"
-        android:clipToPadding="false"/>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

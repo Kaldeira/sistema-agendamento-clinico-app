@@ -1,6 +1,7 @@
 package com.clinica.app.Activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -9,26 +10,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.clinica.app.DAO.HistoricoConsultaAdapter;
-import com.clinica.app.Controle.BancoDados;
-import com.clinica.app.Modelo.Pagamento;
+import com.clinica.app.Controle.FirebaseManager;
 import com.clinica.app.R;
 import com.clinica.app.Utils.BarraNavHelper;
 import com.clinica.app.databinding.ActivityHistoricoConsultasBinding;
 import com.clinica.app.Modelo.Consulta;
-import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.Controle.SessionManager;
 
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HistoricoConsultasActivity extends AppCompatActivity {
 
     private ActivityHistoricoConsultasBinding binding;
-    private BancoDados db;
+    private FirebaseManager fb;
     private SessionManager session;
 
-    // barra de botoes nav
     private LinearLayout navHome, navPerfil, navConsultas, navChat, navHistorico;
-    private LinearLayout  navPacientes, navAdmin;
+    private LinearLayout navPacientes, navAdmin;
     private View navLoginBtn;
     private TextView tvGreeting;
 
@@ -38,16 +36,12 @@ public class HistoricoConsultasActivity extends AppCompatActivity {
         binding = ActivityHistoricoConsultasBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        getSupportActionBar().setTitle("Histórico de Consultas");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        db = BancoDados.getInstance(this);
+        fb = FirebaseManager.getInstance();
         session = new SessionManager(this);
 
         binding.rvHistorico.setLayoutManager(new LinearLayoutManager(this));
 
         bindViews();
-
         BarraNavHelper.setupBottomNav(
                 this,
                 findViewById(R.id.navHome),
@@ -60,45 +54,98 @@ public class HistoricoConsultasActivity extends AppCompatActivity {
                 findViewById(R.id.navLogin)
         );
 
-        List<Consulta> consultas;
-        if (session.isMedico()) {
-            consultas = db.buscarConsultasPorMedico(session.getUserId());
-            for (Consulta c : consultas) {
-                Usuario p = db.buscarUsuarioPorId(c.getPacienteId());
-                if (p != null) c.setNomePaciente(p.getNome());
-            }
-        } else {
-            consultas = db.buscarConsultasPorPaciente(session.getUserId());
-            for (Consulta c : consultas) {
-                Usuario m = db.buscarUsuarioPorId(c.getMedicoId());
-                if (m != null) {
-                    c.setNomeMedico(m.getNome());
-                    c.setEspecialidadeMedico(m.getEspecialidade());
-                }
-                Pagamento p = db.buscarPagamentoPorConsulta(c.getId());
-                c.setPagamento(p);
-            }
-        }
+        carregarConsultas();
+    }
 
-        if (consultas.isEmpty()) {
-            findViewById(R.id.tvVazio).setVisibility(View.VISIBLE);
-        }
-
+    private void carregarConsultas() {
         HistoricoConsultaAdapter adapter = new HistoricoConsultaAdapter(session.isMedico());
-        adapter.setLista(consultas);
         binding.rvHistorico.setAdapter(adapter);
+
+        if (session.isMedico()) {
+            carregarParaMedico(adapter);
+        } else {
+            carregarParaPaciente(adapter);
+        }
+    }
+
+    private void carregarParaMedico(HistoricoConsultaAdapter adapter) {
+        fb.buscarConsultasPorMedico(session.getUsername(), consultas -> {
+
+            if (consultas == null || consultas.isEmpty()) {
+                runOnUiThread(() -> findViewById(R.id.tvVazio).setVisibility(View.VISIBLE));
+                return;
+            }
+
+            AtomicInteger pendentes = new AtomicInteger(consultas.size());
+
+            for (Consulta c : consultas) {
+                fb.buscarUsuarioPorUsername(c.getPacienteId(), paciente -> {
+
+                    if (paciente != null) c.setNomePaciente(paciente.getNome());
+
+                    if (pendentes.decrementAndGet() == 0) {
+                        runOnUiThread(() -> adapter.setLista(consultas));
+                    }
+                });
+            }
+        });
+    }
+
+
+    private void carregarParaPaciente(HistoricoConsultaAdapter adapter) {
+        fb.buscarConsultasPorPaciente(session.getUsername(), consultas -> {
+
+            Log.d("Consultas", "Username: " + session.getUsername());
+            Log.d("Consultas", "Size: " + consultas.size());
+
+            if (consultas == null || consultas.isEmpty()) {
+                runOnUiThread(() -> findViewById(R.id.tvVazio).setVisibility(View.VISIBLE));
+                return;
+            }
+
+            int total = consultas.size();
+
+
+            // Cada consulta dispara 2 chamadas assíncronas em série (médico → pagamento).
+            // O contador só avança quando AMBAS terminam para uma dada consulta.
+            AtomicInteger pendentes = new AtomicInteger(total);
+
+            for (Consulta c : consultas) {
+
+                Log.d("Consulta", "MedicoId: " + c.getMedicoId());
+
+                // 1ª chamada: busca nome e especialidade do médico
+                fb.buscarUsuarioPorUsername(c.getMedicoId(), medico -> {
+
+                    if (medico != null) {
+                        c.setNomeMedico(medico.getNome());
+                        c.setEspecialidadeMedico(medico.getEspecialidade());
+                    }
+
+                    // 2ª chamada (encadeada): busca pagamento — só contabiliza aqui
+                    fb.buscarPagamentoPorConsulta(c.getId(), pagamento -> {
+
+                        c.setPagamento(pagamento);   // null é tratado no adapter
+
+                        if (pendentes.decrementAndGet() == 0) {
+                            runOnUiThread(() -> adapter.setLista(consultas));
+                        }
+                    });
+                });
+            }
+        });
     }
 
     private void bindViews() {
-        tvGreeting    = findViewById(R.id.tvGreeting);
-        navHome       = findViewById(R.id.navHome);
-        navPerfil     = findViewById(R.id.navPerfil);
-        navConsultas  = findViewById(R.id.navConsultas);
-        navChat       = findViewById(R.id.navChat);
-        navHistorico  = findViewById(R.id.navHistorico);
-        navPacientes  = findViewById(R.id.navPacientes);
-        navAdmin      = findViewById(R.id.navAdmin);
-        navLoginBtn   = findViewById(R.id.navLogin);
+        tvGreeting   = findViewById(R.id.tvGreeting);
+        navHome      = findViewById(R.id.navHome);
+        navPerfil    = findViewById(R.id.navPerfil);
+        navConsultas = findViewById(R.id.navConsultas);
+        navChat      = findViewById(R.id.navChat);
+        navHistorico = findViewById(R.id.navHistorico);
+        navPacientes = findViewById(R.id.navPacientes);
+        navAdmin     = findViewById(R.id.navAdmin);
+        navLoginBtn  = findViewById(R.id.navLogin);
     }
 
     @Override

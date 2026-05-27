@@ -3,6 +3,8 @@ package com.clinica.app.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.clinica.app.R;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,8 +32,8 @@ public class MercadoPagoService {
     private static final String BASE_URL = "https://api.mercadopago.com";
     private static final MediaType JSON  = MediaType.get("application/json; charset=utf-8");
 
-    private static final String DEFAULT_ACCESS_TOKEN = "YOUR_ACCESS_TOKEN_HERE";
-    private static final String DEFAULT_PUBLIC_KEY   = "YOUR_PUBLIC_KEY_HERE";
+    private static final String DEFAULT_ACCESS_TOKEN = "";
+    private static final String DEFAULT_PUBLIC_KEY   = "";
 
     private final OkHttpClient client;
     private final String accessToken;
@@ -39,16 +41,14 @@ public class MercadoPagoService {
 
     public MercadoPagoService(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREF_MP, Context.MODE_PRIVATE);
-        String token = prefs.getString(KEY_ACCESS_TOKEN, "");
-        this.accessToken = token.isEmpty() ? DEFAULT_ACCESS_TOKEN : token;
-        this.isSandbox   = prefs.getBoolean(KEY_IS_SANDBOX, true);
-        this.client      = buildClient();
-    }
 
-    public MercadoPagoService() {
-        this.accessToken = DEFAULT_ACCESS_TOKEN;
-        this.isSandbox   = true;
-        this.client      = buildClient();
+        String token = prefs.getString(KEY_ACCESS_TOKEN, "");
+        this.accessToken = token.isEmpty()
+                ? context.getString(R.string.mp_access_key)
+                : token;
+
+        this.isSandbox = prefs.getBoolean(KEY_IS_SANDBOX, true);
+        this.client = buildClient();
     }
 
     private OkHttpClient buildClient() {
@@ -75,12 +75,12 @@ public class MercadoPagoService {
         public boolean sucesso() { return erro == null; }
     }
 
-    public PreferenceResult criarPreferencia(int consultaId, String descricao,
+    public PreferenceResult criarPreferencia(String consultaId, String descricao,
                                              int quantidade, double valor) {
         try {
             //criaçao do link de pagamento
             JSONObject item = new JSONObject();
-            item.put("id",          String.valueOf(consultaId)); // qual pagamento de qual consulta
+            item.put("id",         consultaId); // qual pagamento de qual consulta
             item.put("title",       descricao);  //d escricao do produto
             item.put("quantity",    quantidade); // quantidade
             item.put("unit_price",  valor); // valor
@@ -98,7 +98,7 @@ public class MercadoPagoService {
             payload.put("items",               items);
             payload.put("back_urls",           backUrls);
             payload.put("auto_return",         "approved");
-            payload.put("external_reference",  String.valueOf(consultaId)); // separar por consulta
+            payload.put("external_reference", consultaId); // separar por consulta
             payload.put("statement_descriptor","Clinica App");
 
             RequestBody body = RequestBody.create(payload.toString(), JSON);
@@ -188,7 +188,13 @@ public class MercadoPagoService {
     public static String getPublicKey(Context context) {
         String key = context.getSharedPreferences(PREF_MP, Context.MODE_PRIVATE)
                 .getString(KEY_PUBLIC_KEY, "");
-        return key.isEmpty() ? DEFAULT_PUBLIC_KEY : key;
+
+
+        if (!key.isEmpty()) {
+            return key;
+        }
+
+        return context.getString(R.string.mp_public_key);
     }
 
     public static boolean isSandbox(Context context) {
