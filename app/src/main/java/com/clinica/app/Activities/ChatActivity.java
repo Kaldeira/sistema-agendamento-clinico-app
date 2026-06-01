@@ -18,6 +18,7 @@ import com.clinica.app.databinding.ActivityChatBinding;
 import com.clinica.app.Modelo.Mensagem;
 import com.clinica.app.Controle.SessionManager;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +30,9 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseManager fb;
     private SessionManager session;
     private MensagemAdapter adapter;
+
     private String destinatarioNome, fotoPerfil, destinatarioUsername;
+    private ListenerRegistration mensagensListener;
 
     TextView nomeDestinatario;
     ShapeableImageView fotoDestinario;
@@ -41,11 +44,11 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         session = new SessionManager(this);
-        fb      = FirebaseManager.getInstance();
+        fb = FirebaseManager.getInstance();
 
-        destinatarioNome     = getIntent().getStringExtra("destinatario_nome");
+        destinatarioNome = getIntent().getStringExtra("destinatario_nome");
         destinatarioUsername = getIntent().getStringExtra("destinatario_username");
-        fotoPerfil           = getIntent().getStringExtra("foto_perfil");
+        fotoPerfil = getIntent().getStringExtra("foto_perfil");
 
         Log.d("CHAT", "destinatarioUsername: " + destinatarioUsername);
 
@@ -55,7 +58,9 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         nomeDestinatario = findViewById(R.id.tvNomeChat);
-        fotoDestinario   = findViewById(R.id.imgFotoPerfil);
+        fotoDestinario = findViewById(R.id.imgFotoPerfil);
+
+        nomeDestinatario.setText(destinatarioNome);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
@@ -64,11 +69,8 @@ public class ChatActivity extends AppCompatActivity {
         adapter = new MensagemAdapter(session.getUsername());
         binding.rvMensagens.setAdapter(adapter);
 
-        carregarMensagens();
-
         binding.btnEnviar.setOnClickListener(v -> enviarMensagem());
         findViewById(R.id.btnVoltar).setOnClickListener(v -> finish());
-        nomeDestinatario.setText(destinatarioNome);
 
         if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
             Glide.with(this)
@@ -77,22 +79,51 @@ public class ChatActivity extends AppCompatActivity {
                     .placeholder(R.drawable.ic_menu_person)
                     .error(R.drawable.ic_menu_person)
                     .into(fotoDestinario);
+
             fotoDestinario.setVisibility(View.VISIBLE);
         }
     }
 
-    private void carregarMensagens() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        iniciarListenerMensagens();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mensagensListener != null) {
+            mensagensListener.remove();
+            mensagensListener = null;
+        }
+    }
+
+    private void iniciarListenerMensagens() {
         fb.marcarMensagensComoLidas(destinatarioUsername, session.getUsername());
-        fb.buscarConversa(session.getUsername(), destinatarioUsername, msgs ->
-                runOnUiThread(() -> {
+
+        mensagensListener = fb.ouvirConversa(
+                session.getUsername(),
+                destinatarioUsername,
+                msgs -> runOnUiThread(() -> {
                     adapter.setLista(msgs);
-                    if (!msgs.isEmpty())
+
+                    if (!msgs.isEmpty()) {
                         binding.rvMensagens.scrollToPosition(msgs.size() - 1);
-                }));
+                    }
+
+                    fb.marcarMensagensComoLidas(
+                            destinatarioUsername,
+                            session.getUsername()
+                    );
+                })
+        );
     }
 
     private void enviarMensagem() {
         String texto = binding.etMensagem.getText().toString().trim();
+
         if (TextUtils.isEmpty(texto)) return;
 
         Mensagem m = new Mensagem();
@@ -104,12 +135,16 @@ public class ChatActivity extends AppCompatActivity {
 
         binding.etMensagem.setText("");
 
-        fb.enviarMensagem(m,
-                id -> carregarMensagens(),
-                e  -> Toast.makeText(this, "Erro ao enviar mensagem.", Toast.LENGTH_SHORT).show()
+        fb.enviarMensagem(
+                m,
+                id -> {},
+                e -> Toast.makeText(this, "Erro ao enviar mensagem.", Toast.LENGTH_SHORT).show()
         );
     }
 
     @Override
-    public boolean onSupportNavigateUp() { onBackPressed(); return true; }
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

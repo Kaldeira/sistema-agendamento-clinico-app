@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F6F8FC">
 
-    <!-- SCROLL -->
+
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- HEADER (MODERNO) -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
@@ -68,14 +68,14 @@
                     android:layout_marginTop="2dp"/>
             </LinearLayout>
 
-            <!-- CONTEÚDO -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <!-- CARD SOBRE -->
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- BOTÕES -->
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVerAgenda"
                     android:layout_width="match_parent"
@@ -151,7 +151,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Home -->
+
         <LinearLayout
             android:id="@+id/navHome"
             android:layout_width="0dp"
@@ -174,7 +174,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Login -->
+
         <LinearLayout
             android:id="@+id/navLogin"
             android:layout_width="0dp"
@@ -198,7 +198,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Perfil -->
+
         <LinearLayout
             android:id="@+id/navPerfil"
             android:layout_width="0dp"
@@ -222,7 +222,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Chat -->
+
         <LinearLayout
             android:id="@+id/navChat"
             android:layout_width="0dp"
@@ -246,7 +246,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Consultas -->
+
         <LinearLayout
             android:id="@+id/navConsultas"
             android:layout_width="0dp"
@@ -293,7 +293,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Pacientes (médico) -->
+
         <LinearLayout
             android:id="@+id/navPacientes"
             android:layout_width="0dp"
@@ -317,7 +317,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Admin -->
+
         <LinearLayout
             android:id="@+id/navAdmin"
             android:layout_width="0dp"

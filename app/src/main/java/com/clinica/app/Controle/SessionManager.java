@@ -14,7 +14,7 @@ public class SessionManager {
     }
 
     public void criarSessao(String nome, String tipo, String email,
-                            String foto, String username, String senhaAtual) {
+                            String foto, String username, String senhaAtual, boolean aprovado) {
         editor.putBoolean("is_logged",   true);
         editor.putString("user_nome",    nome);
         editor.putString("user_tipo",    tipo);
@@ -22,12 +22,13 @@ public class SessionManager {
         editor.putString("user_foto",    foto);
         editor.putString("username",     username);
         editor.putString("senhaAtual",   senhaAtual);
+        editor.putBoolean("aprovado", aprovado);
         editor.apply();
     }
 
     public void criarSessao(int idIgnorado, String nome, String tipo, String email,
-                            String foto, String username, String senhaAtual) {
-        criarSessao(nome, tipo, email, foto, username, senhaAtual);
+                            String foto, String username, String senhaAtual, boolean aprovado) {
+        criarSessao(nome, tipo, email, foto, username, senhaAtual, aprovado);
     }
 
     public void encerrarSessao() {
@@ -45,6 +46,7 @@ public class SessionManager {
     public String getEmail()   { return prefs.getString("user_email", ""); }
     public String getFotoPerfil() { return prefs.getString("user_foto", ""); }
     public String getUsername()   { return prefs.getString("username",  ""); }
+    public boolean getAprovado()   { return prefs.getBoolean("aprovado",  false); }
 
     public boolean isMedico()   { return "medico".equals(getTipo()); }
     public boolean isPaciente() { return "paciente".equals(getTipo()); }

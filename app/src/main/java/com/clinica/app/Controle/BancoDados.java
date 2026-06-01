@@ -21,7 +21,7 @@ import java.util.Locale;
 public class BancoDados extends SQLiteOpenHelper {
 
     private static final String BANCO_NOME = "clinica.db";
-    private static final int    BANCO_VERSAO = 2; // bumped from 1
+    private static final int    BANCO_VERSAO = 2;
 
     private static BancoDados instance;
 
@@ -166,7 +166,7 @@ public class BancoDados extends SQLiteOpenHelper {
             }
         }
 
-        // CONSULTAS
+
         db.execSQL("INSERT INTO consultas (paciente_id, medico_id, data, hora, status, pagamento, observacoes) VALUES " +
                 "(5, 1, '2026-05-05', '08:00', 'confirmada', 'pago', 'Dor no peito frequente')," +
                 "(6, 2, '2026-05-06', '09:00', 'pendente', 'pendente', 'Consulta pediátrica de rotina')," +
@@ -174,7 +174,7 @@ public class BancoDados extends SQLiteOpenHelper {
                 "(5, 4, '2026-05-08', '11:00', 'cancelada', 'reembolsado', 'Consulta dermatológica')," +
                 "(6, 1, '2026-05-09', '14:00', 'confirmada', 'pago', 'Check-up cardiológico');");
 
-        // PAGAMENTOS
+
         db.execSQL("INSERT INTO pagamentos (consulta_id, metodo, status, mp_payment_id, mp_preference_id, valor, data_hora) VALUES " +
                 "(1, 'pix', 'aprovado', 'MP123', 'PREF123', 200.0, '2026-05-05 07:50')," +
                 "(2, 'cartao', 'pendente', 'MP124', 'PREF124', 150.0, '2026-05-06 08:50')," +
@@ -182,13 +182,13 @@ public class BancoDados extends SQLiteOpenHelper {
                 "(4, 'cartao', 'recusado', 'MP126', 'PREF126', 120.0, '2026-05-08 10:50')," +
                 "(5, 'dinheiro', 'aprovado', NULL, NULL, 220.0, '2026-05-09 13:50');");
 
-        // HISTÓRICO MÉDICO
+
         db.execSQL("INSERT INTO historico_medico (paciente_id, medico_id, data, diagnostico, observacoes, prescricao) VALUES " +
                 "(5, 1, '2026-05-05', 'Angina leve', 'Paciente relatou dor ao esforço', 'Uso de beta-bloqueadores')," +
                 "(7, 3, '2026-05-07', 'Entorse no joelho', 'Inflamação leve', 'Fisioterapia + anti-inflamatório')," +
                 "(6, 1, '2026-05-09', 'Saudável', 'Check-up normal', 'Manter hábitos saudáveis');");
 
-        // MENSAGENS
+
         db.execSQL("INSERT INTO mensagens (remetente_id, destinatario_id, texto, data_hora, lida) VALUES " +
                 "(5, 1, 'Doutor, estou com dor no peito.', '2026-05-04 20:00', 1)," +
                 "(1, 5, 'Vamos investigar na consulta.', '2026-05-04 20:10', 1)," +

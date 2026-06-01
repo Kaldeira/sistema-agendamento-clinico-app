@@ -50,6 +50,87 @@
                 android:layout_marginBottom="16dp" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/layoutAprovacao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Médico aguardando aprovação"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A2E"
+                        android:layout_marginBottom="14dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Especialidade"
+                        style="@style/ModernTextField"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEspecialidade2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text|textCapWords" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Descrição / Bio"
+                        android:layout_marginBottom="12dp"
+                        style="@style/ModernTextField">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDescricao2"
+                            style="@style/ModernEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine"
+                            android:minLines="3"
+                            android:gravity="top" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="CRM"
+                        style="@style/ModernTextField">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etCRM2"
+                            style="@style/ModernEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text|textCapWords"
+                            android:layout_marginBottom="14dp"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAprovar"
+                        style="@style/ModernOutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:text="Aprovar Médico" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/layoutInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
@@ -84,6 +165,21 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName|textCapWords" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="CPF"
+                        style="@style/ModernTextField"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etCPF"
+                            style="@style/ModernEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout

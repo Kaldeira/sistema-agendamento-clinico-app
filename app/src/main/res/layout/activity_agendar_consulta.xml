@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F6F8FC">
 
-    <!-- TOP BAR -->
+
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="0dp"
@@ -39,7 +39,7 @@
             android:layout_marginStart="12dp"/>
     </LinearLayout>
 
-    <!-- SCROLL -->
+
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -55,7 +55,7 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- RESUMO CARD -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- PAGAMENTO -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- OBSERVAÇÃO -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -170,7 +170,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- BOTÃO -->
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAgendar"
                 android:layout_width="match_parent"

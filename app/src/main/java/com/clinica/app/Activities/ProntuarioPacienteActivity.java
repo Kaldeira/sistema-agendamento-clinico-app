@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -76,6 +77,7 @@ public class ProntuarioPacienteActivity extends AppCompatActivity {
                 startActivity(new Intent(this, LoginActivity.class));
                 return;
             }
+
             Intent intent = new Intent(this, HistoricoMedicoActivity.class);
             intent.putExtra("paciente_username", paciente.getUsername());
             startActivity(intent);

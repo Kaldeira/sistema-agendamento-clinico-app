@@ -148,7 +148,7 @@
             android:clipToPadding="false"
             android:visibility="gone" />
 
-        <!-- Payments tab -->
+
         <LinearLayout
             android:id="@+id/layoutPagamentos"
             android:layout_width="match_parent"
@@ -156,7 +156,7 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <!-- FILTROS -->
+
             <LinearLayout
                 android:id="@+id/layoutFiltros"
                 android:layout_width="match_parent"
@@ -165,7 +165,7 @@
                 android:padding="12dp"
                 android:visibility="gone">
 
-                <!-- Método -->
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/ModernDropdown"
                     android:layout_width="0dp"
@@ -185,7 +185,7 @@
                         android:popupBackground="@drawable/bg_dropdown"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Status -->
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/ModernDropdown"
                     android:layout_width="0dp"
@@ -207,7 +207,7 @@
 
             </LinearLayout>
 
-            <!-- LISTA -->
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPagamentos"
                 android:layout_width="match_parent"
@@ -276,7 +276,7 @@
                         android:inputType="textNoSuggestions" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Environment selector -->
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -457,7 +457,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Histórico -->
+
         <LinearLayout
             android:id="@+id/navHistorico"
             android:layout_width="0dp"
@@ -481,7 +481,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Pacientes -->
+
         <LinearLayout
             android:id="@+id/navPacientes"
             android:layout_width="0dp"
@@ -505,7 +505,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Admin -->
+
         <LinearLayout
             android:id="@+id/navAdmin"
             android:layout_width="0dp"

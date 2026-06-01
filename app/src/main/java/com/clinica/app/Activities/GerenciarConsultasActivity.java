@@ -86,24 +86,18 @@ public class GerenciarConsultasActivity extends AppCompatActivity {
     private void carregarConsultas() {
         fb.buscarConsultasPorMedico(session.getUsername(), consultas -> {
 
-            // Callback do Firebase pode chegar em thread de background.
-            // Lista vazia: limpa o adapter na UI thread e encerra.
             if (consultas == null || consultas.isEmpty()) {
                 runOnUiThread(() -> adapter.setLista(new ArrayList<>()));
                 return;
             }
 
-            // Contador regressivo: quando chegar a 0 todos os nomes foram resolvidos.
             AtomicInteger pendentes = new AtomicInteger(consultas.size());
 
             for (Consulta c : consultas) {
                 fb.buscarUsuarioPorUsername(c.getPacienteId(), paciente -> {
 
-                    // Atualiza o nome dentro da Consulta (operação em memória, thread-safe
-                    // porque cada Consulta é acessada por apenas um callback de cada vez).
                     c.setNomePaciente(paciente != null ? paciente.getNome() : "Paciente");
 
-                    // Quando todos os callbacks terminarem, atualiza a UI.
                     if (pendentes.decrementAndGet() == 0) {
                         runOnUiThread(() -> adapter.setLista(consultas));
                     }

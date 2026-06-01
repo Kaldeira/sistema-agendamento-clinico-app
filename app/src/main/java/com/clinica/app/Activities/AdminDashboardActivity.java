@@ -298,7 +298,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         spinnerStatusPagamento.setOnItemClickListener((p, v, pos, id) -> filtrarPagamentos());
     }
 
-    // carregarConfigMP, atualizarStatusMP, salvarConfigMP, limparConfigMP — sem mudanças
     private void carregarConfigMP() {
         if (etAccessToken == null) return;
 

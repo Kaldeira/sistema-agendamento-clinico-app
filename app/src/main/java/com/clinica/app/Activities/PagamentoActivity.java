@@ -39,6 +39,7 @@ import androidx.core.content.ContextCompat;
 
 public class PagamentoActivity extends AppCompatActivity {
 
+    //esses vao para outra tela
     public static final String EXTRA_CONSULTA_ID = "consulta_id";
     public static final String EXTRA_TOTAL       = "total";
     public static final String EXTRA_MEDICO_NOME = "medico_nome";
@@ -176,15 +177,15 @@ public class PagamentoActivity extends AppCompatActivity {
 
         switch (metodoSelecionado) {
             case Pagamento.METODO_PIX:
-                // PIX: aprovação imediata → marca slot como ocupado
+
                 registrarPagamento(Pagamento.METODO_PIX, Pagamento.STATUS_APROVADO, null, null);
                 fb.atualizarStatusPagamentoConsulta(consultaId, "confirmada", ok -> {});
                 exibirResultado("sucesso", null);
                 break;
 
             case Pagamento.METODO_DINHEIRO:
-                // Dinheiro: pendente → slot JÁ foi reservado ao agendar, mas dia não fica "ocupado"
-                // no calendário até confirmação. Mantemos pendente.
+
+
                 registrarPagamento(Pagamento.METODO_DINHEIRO, Pagamento.STATUS_PENDENTE, null, null);
                 fb.atualizarStatusConsulta(consultaId, "pendente", ok -> {});
                 exibirResultado("pendente", null);
@@ -244,14 +245,14 @@ public class PagamentoActivity extends AppCompatActivity {
         fb.atualizarStatusPagamento(consultaId, status, payId, ok -> {});
 
         if (Pagamento.STATUS_APROVADO.equals(status)) {
-            // Pagamento aprovado → confirma consulta (slot já está indisponível desde o agendamento)
+
             fb.atualizarStatusPagamentoConsulta(consultaId, "confirmada", ok -> {});
 
         } else if (Pagamento.STATUS_PENDENTE.equals(status)) {
             fb.atualizarStatusPagamentoConsulta(consultaId, "pendente", ok -> {});
 
         } else {
-            // Recusado → cancela consulta E libera o slot de volta
+
             fb.atualizarStatusPagamentoConsulta(consultaId, "cancelada", ok -> {});
         }
 

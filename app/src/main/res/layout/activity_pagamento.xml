@@ -30,7 +30,7 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Header -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 android:textColor="#666666"
                 android:layout_marginTop="4dp" />
 
-            <!-- Total -->
+
             <androidx.cardview.widget.CardView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Method title -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
                 android:layout_marginTop="28dp"
                 android:layout_marginBottom="12dp" />
 
-            <!-- PIX Card -->
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardPix"
                 android:layout_width="match_parent"
@@ -151,7 +151,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- CARTÃO Card -->
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardCartao"
                 android:layout_width="match_parent"
@@ -203,7 +203,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- DINHEIRO Card -->
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardDinheiro"
                 android:layout_width="match_parent"

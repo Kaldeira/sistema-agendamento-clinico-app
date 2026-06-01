@@ -69,6 +69,7 @@ public class CadastroActivity extends AppCompatActivity {
         binding.tvLogin.setOnClickListener(v -> finish());
 
         MascaraHelper.CpfMask(binding.etCpf);
+        MascaraHelper.CrmMask(binding.etCRM);
     }
 
     private void bindViews() {
@@ -123,7 +124,12 @@ public class CadastroActivity extends AppCompatActivity {
         u.setGenero(genero);
         u.setUsername(username);
 
-        // Validações de unicidade e cadastro via Firebase
+        if (tipo.equalsIgnoreCase("medico")) {
+            u.setAprovado(false);
+        } else {
+            u.setAprovado(true);
+        }
+
         FirebaseManager.getInstance().cadastrarUsuario(
                 u,
                 result -> runOnUiThread(() -> {

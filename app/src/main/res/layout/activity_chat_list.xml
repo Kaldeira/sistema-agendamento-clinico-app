@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F5F7FA">
 
-    <!-- Conteúdo -->
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -43,7 +43,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <!-- Home -->
+
         <LinearLayout
             android:id="@+id/navHome"
             android:layout_width="0dp"
@@ -66,7 +66,7 @@
                 android:textColor="@color/navbar_botao_desativado"/>
         </LinearLayout>
 
-        <!-- Login -->
+
         <LinearLayout
             android:id="@+id/navLogin"
             android:layout_width="0dp"
@@ -88,7 +88,7 @@
                 android:textColor="@color/navbar_botao_desativado" />
         </LinearLayout>
 
-        <!-- Perfil -->
+
         <LinearLayout
             android:id="@+id/navPerfil"
             android:layout_width="0dp"
@@ -110,7 +110,7 @@
                 android:textColor="@color/navbar_botao_desativado" />
         </LinearLayout>
 
-        <!-- Chat -->
+
         <LinearLayout
             android:id="@+id/navChat"
             android:layout_width="0dp"
@@ -132,7 +132,7 @@
                 android:textColor="@color/navbar_botao_ativado" />
         </LinearLayout>
 
-        <!-- Consultas -->
+
         <LinearLayout
             android:id="@+id/navConsultas"
             android:layout_width="0dp"
@@ -175,7 +175,7 @@
                 android:textColor="@color/navbar_botao_desativado" />
         </LinearLayout>
 
-        <!-- Pacientes (médico) -->
+
         <LinearLayout
             android:id="@+id/navPacientes"
             android:layout_width="0dp"
@@ -197,7 +197,7 @@
                 android:textColor="@color/navbar_botao_desativado" />
         </LinearLayout>
 
-        <!-- Admin -->
+
         <LinearLayout
             android:id="@+id/navAdmin"
             android:layout_width="0dp"

@@ -13,8 +13,8 @@ public class Pagamento {
     private String    consultaId;
     private String metodo;
     private String status;
-    private String mpPaymentId;    // Mercado Pago payment_id (nullable)
-    private String mpPreferenceId; // Mercado Pago preference_id (nullable)
+    private String mpPaymentId;
+    private String mpPreferenceId;
     private double valor;
     private String dataHora;
 
@@ -28,7 +28,7 @@ public class Pagamento {
         this.status     = STATUS_PENDENTE;
     }
 
-    // ─── Getters & Setters ────────────────────────────────────────────────────
+
 
     public int    getId()              { return id; }
     public void   setId(int id)        { this.id = id; }
@@ -54,7 +54,7 @@ public class Pagamento {
     public String getDataHora()                      { return dataHora; }
     public void   setDataHora(String dataHora)       { this.dataHora = dataHora; }
 
-    // ─── Helpers ──────────────────────────────────────────────────────────────
+
 
     public boolean isAprovado()  { return STATUS_APROVADO.equals(status); }
     public boolean isPendente()  { return STATUS_PENDENTE.equals(status); }

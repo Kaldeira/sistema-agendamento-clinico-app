@@ -49,6 +49,10 @@ public class AdminUsuarioAdapter extends RecyclerView.Adapter<AdminUsuarioAdapte
         h.btnEditar.setOnClickListener(v -> onEdit.onEdit(u));
         h.btnDeletar.setOnClickListener(v -> onDelete.onDelete(u));
 
+        if (!u.getAprovado()) {
+            h.tvAprovado.setVisibility(View.VISIBLE);
+        }
+
         if (u.getFotoPerfil() != null && !u.getFotoPerfil().isEmpty()) {
 
             Glide.with(h.itemView.getContext())
@@ -83,7 +87,7 @@ public class AdminUsuarioAdapter extends RecyclerView.Adapter<AdminUsuarioAdapte
     public int getItemCount() { return lista.size(); }
 
     public static class VH extends RecyclerView.ViewHolder {
-        TextView tvNome, tvInfo, tvIniciais;
+        TextView tvNome, tvInfo, tvIniciais, tvAprovado;
         Button   btnEditar, btnDeletar;
         ShapeableImageView ivFotoUser;
 
@@ -95,6 +99,8 @@ public class AdminUsuarioAdapter extends RecyclerView.Adapter<AdminUsuarioAdapte
             btnDeletar= v.findViewById(R.id.btnDeletar);
             ivFotoUser = v.findViewById(R.id.ivFotoUser);
             tvIniciais = v.findViewById(R.id.tvIniciais);
+            tvAprovado = v.findViewById(R.id.tvAprovado);
+
         }
     }
 }

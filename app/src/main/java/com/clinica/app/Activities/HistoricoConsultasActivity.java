@@ -1,5 +1,6 @@
 package com.clinica.app.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class HistoricoConsultasActivity extends AppCompatActivity {
 
+    private static final double VALOR_CONSULTA = 150.00;
     private ActivityHistoricoConsultasBinding binding;
     private FirebaseManager fb;
     private SessionManager session;
@@ -64,6 +66,16 @@ public class HistoricoConsultasActivity extends AppCompatActivity {
         if (session.isMedico()) {
             carregarParaMedico(adapter);
         } else {
+            adapter.setOnConsultaClick(consulta -> {
+
+                Intent intent = new Intent(this, PagamentoActivity.class);
+                intent.putExtra(PagamentoActivity.EXTRA_CONSULTA_ID, consulta.getId());
+                intent.putExtra(PagamentoActivity.EXTRA_TOTAL, VALOR_CONSULTA);
+                intent.putExtra(PagamentoActivity.EXTRA_MEDICO_NOME, consulta.getNomeMedico());
+
+                startActivity(intent);
+            });
+
             carregarParaPaciente(adapter);
         }
     }
@@ -106,15 +118,12 @@ public class HistoricoConsultasActivity extends AppCompatActivity {
             int total = consultas.size();
 
 
-            // Cada consulta dispara 2 chamadas assíncronas em série (médico → pagamento).
-            // O contador só avança quando AMBAS terminam para uma dada consulta.
             AtomicInteger pendentes = new AtomicInteger(total);
 
             for (Consulta c : consultas) {
 
                 Log.d("Consulta", "MedicoId: " + c.getMedicoId());
 
-                // 1ª chamada: busca nome e especialidade do médico
                 fb.buscarUsuarioPorUsername(c.getMedicoId(), medico -> {
 
                     if (medico != null) {
@@ -122,10 +131,9 @@ public class HistoricoConsultasActivity extends AppCompatActivity {
                         c.setEspecialidadeMedico(medico.getEspecialidade());
                     }
 
-                    // 2ª chamada (encadeada): busca pagamento — só contabiliza aqui
                     fb.buscarPagamentoPorConsulta(c.getId(), pagamento -> {
 
-                        c.setPagamento(pagamento);   // null é tratado no adapter
+                        c.setPagamento(pagamento);
 
                         if (pendentes.decrementAndGet() == 0) {
                             runOnUiThread(() -> adapter.setLista(consultas));

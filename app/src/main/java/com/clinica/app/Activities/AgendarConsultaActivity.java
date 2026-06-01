@@ -93,8 +93,6 @@ public class AgendarConsultaActivity extends AppCompatActivity {
 
         fb.agendarConsulta(consulta,
                 consultaId -> {
-                    agendarNotificacao(consultaId);
-
                     Intent intent = new Intent(this, PagamentoActivity.class);
                     intent.putExtra(PagamentoActivity.EXTRA_CONSULTA_ID, consultaId);
                     intent.putExtra(PagamentoActivity.EXTRA_TOTAL, VALOR_CONSULTA);
@@ -110,13 +108,6 @@ public class AgendarConsultaActivity extends AppCompatActivity {
         );
     }
 
-    private void agendarNotificacao(String consultaId) {
-        try {
-            NotificacaoReceiver.criarCanalNotificacao(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public boolean onSupportNavigateUp() {

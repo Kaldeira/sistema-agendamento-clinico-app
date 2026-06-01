@@ -18,13 +18,13 @@ import okhttp3.Response;
 
 public class MercadoPagoService {
 
-    // ─── Config keys (must match MpConfigActivity) ────────────────────────────
+
     public static final String PREF_MP          = "mp_config";
     public static final String KEY_ACCESS_TOKEN = "access_token";
     public static final String KEY_PUBLIC_KEY   = "public_key";
     public static final String KEY_IS_SANDBOX   = "is_sandbox";
 
-    // ─── Deep-link URLs ───────────────────────────────────────────────────────
+
     public static final String DEEP_LINK_SUCCESS = "clinicaapp://pagamento/sucesso";
     public static final String DEEP_LINK_FAILURE = "clinicaapp://pagamento/falha";
     public static final String DEEP_LINK_PENDING = "clinicaapp://pagamento/pendente";
@@ -166,7 +166,7 @@ public class MercadoPagoService {
 
                 if (results.length() > 0) {
                     JSONObject pagamento = results.getJSONObject(0);
-                    return pagamento.getString("id"); // 🔥 payment_id
+                    return pagamento.getString("id");
                 }
             }
         } catch (Exception e) {

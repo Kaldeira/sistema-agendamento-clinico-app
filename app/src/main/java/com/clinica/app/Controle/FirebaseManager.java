@@ -14,37 +14,23 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.google.firebase.firestore.DocumentChange;
 
-/**
- * FirebaseManager — substitui BancoDados (SQLite) usando Cloud Firestore.
- *
- * Coleções  →  usuarios | consultas | mensagens | historico_medico | agenda | pagamentos
- * Documentos → mesmos campos das tabelas originais.
- *
- * Todos os métodos são assíncronos. Use as interfaces de callback para receber resultados.
- *
- * CORREÇÕES v2:
- *  - docToPagamento: usa doc.getId() para consultaId quando o campo "consulta_id" está ausente
- *  - registrarPagamento: garante que consulta_id é gravado no documento
- *  - docToHistorico: preenche pacienteId, medicoId e nomeMedico
- *  - buscarHistoricoPorPaciente: resolve nomeMedico via join após buscar o histórico
- */
 public class FirebaseManager {
 
-    // ─── Coleções ────────────────────────────────────────────────────────────
-    private static final String COL_USUARIOS   = "usuarios";
-    private static final String COL_CONSULTAS  = "consultas";
-    private static final String COL_MENSAGENS  = "mensagens";
-    private static final String COL_HISTORICO  = "historico_medico";
-    private static final String COL_AGENDA     = "agenda";
+    private static final String COL_USUARIOS = "usuarios";
+    private static final String COL_CONSULTAS = "consultas";
+    private static final String COL_MENSAGENS = "mensagens";
+    private static final String COL_HISTORICO = "historico_medico";
+    private static final String COL_AGENDA = "agenda";
     private static final String COL_PAGAMENTOS = "pagamentos";
 
-    // ─── Singleton ───────────────────────────────────────────────────────────
     private static FirebaseManager instance;
     private final FirebaseFirestore db;
 
@@ -64,31 +50,73 @@ public class FirebaseManager {
     // INTERFACES DE CALLBACK
     // =========================================================================
 
-    public interface OnSuccess  { void onSuccess(); }
-    public interface OnError    { void onError(Exception e); }
+    public interface OnSuccess {
+        void onSuccess();
+    }
 
-    public interface OnUsuarioResult  { void onResult(Usuario usuario); }
-    public interface OnUsuariosResult { void onResult(List<Usuario> lista); }
+    public interface OnError {
+        void onError(Exception e);
+    }
 
-    public interface OnConsultaResult  { void onResult(Consulta consulta); }
-    public interface OnConsultasResult { void onResult(List<Consulta> lista); }
+    public interface OnUsuarioResult {
+        void onResult(Usuario usuario);
+    }
 
-    public interface OnPagamentoResult  { void onResult(Pagamento pagamento); }
-    public interface OnPagamentosResult { void onResult(List<Pagamento> lista); }
+    public interface OnUsuariosResult {
+        void onResult(List<Usuario> lista);
+    }
 
-    public interface OnMensagensResult { void onResult(List<Mensagem> lista); }
-    public interface OnContatosResult  { void onResult(List<Integer> ids); }
+    public interface OnConsultaResult {
+        void onResult(Consulta consulta);
+    }
 
-    public interface OnHistoricoResult { void onResult(List<HistoricoMedico> lista); }
+    public interface OnConsultasResult {
+        void onResult(List<Consulta> lista);
+    }
 
-    public interface OnSlotsResult { void onResult(List<String[]> slots); }
-    public interface OnDatasResult { void onResult(List<String> datas); }
+    public interface OnPagamentoResult {
+        void onResult(Pagamento pagamento);
+    }
 
-    public interface OnIdResult    { void onResult(String id); }
-    public interface OnBoolResult  { void onResult(boolean sucesso); }
+    public interface OnPagamentosResult {
+        void onResult(List<Pagamento> lista);
+    }
 
-    public interface OnHorariosOcupadosResult { void onResult(List<String> horarios); }
-    public interface OnDatasOcupadasResult    { void onResult(List<String> datas); }
+    public interface OnMensagensResult {
+        void onResult(List<Mensagem> lista);
+    }
+
+    public interface OnContatosResult {
+        void onResult(List<Integer> ids);
+    }
+
+    public interface OnHistoricoResult {
+        void onResult(List<HistoricoMedico> lista);
+    }
+
+    public interface OnSlotsResult {
+        void onResult(List<String[]> slots);
+    }
+
+    public interface OnDatasResult {
+        void onResult(List<String> datas);
+    }
+
+    public interface OnIdResult {
+        void onResult(String id);
+    }
+
+    public interface OnBoolResult {
+        void onResult(boolean sucesso);
+    }
+
+    public interface OnHorariosOcupadosResult {
+        void onResult(List<String> horarios);
+    }
+
+    public interface OnDatasOcupadasResult {
+        void onResult(List<String> datas);
+    }
 
     public interface OnDatasInfoResult {
         void onResult(List<String> datasDisponiveis, List<String> datasOcupadas);
@@ -101,15 +129,24 @@ public class FirebaseManager {
     public void cadastrarUsuario(Usuario u, OnIdResult onSuccess, OnError onError) {
         db.collection(COL_USUARIOS).document(u.getUsername()).get()
                 .addOnSuccessListener(doc -> {
-                    if (doc.exists()) { onError.onError(new Exception("Username já existe")); return; }
+                    if (doc.exists()) {
+                        onError.onError(new Exception("Username já existe"));
+                        return;
+                    }
 
                     db.collection(COL_USUARIOS).whereEqualTo("email", u.getEmail()).get()
                             .addOnSuccessListener(snapEmail -> {
-                                if (!snapEmail.isEmpty()) { onError.onError(new Exception("E-mail já cadastrado")); return; }
+                                if (!snapEmail.isEmpty()) {
+                                    onError.onError(new Exception("E-mail já cadastrado"));
+                                    return;
+                                }
 
                                 db.collection(COL_USUARIOS).whereEqualTo("cpf", u.getCpf()).get()
                                         .addOnSuccessListener(snapCpf -> {
-                                            if (!snapCpf.isEmpty()) { onError.onError(new Exception("CPF já cadastrado")); return; }
+                                            if (!snapCpf.isEmpty()) {
+                                                onError.onError(new Exception("CPF já cadastrado"));
+                                                return;
+                                            }
 
                                             db.collection(COL_USUARIOS)
                                                     .document(u.getUsername())
@@ -186,21 +223,40 @@ public class FirebaseManager {
     }
 
     public void buscarMedicos(String filtro, OnUsuariosResult callback) {
-        db.collection(COL_USUARIOS).whereEqualTo("tipo", "medico").get()
+        db.collection(COL_USUARIOS)
+                .whereEqualTo("tipo", "medico")
+                .whereEqualTo("aprovado", true)
+                .limit(50)
+                .get()
                 .addOnSuccessListener(snap -> {
                     List<Usuario> lista = new ArrayList<>();
+
+                    String filtroLower = filtro == null ? "" : filtro.toLowerCase().trim();
+
                     for (DocumentSnapshot doc : snap.getDocuments()) {
                         Usuario u = docToUsuario(doc);
-                        if (filtro == null || filtro.isEmpty()
-                                || u.getNome().toLowerCase().contains(filtro.toLowerCase())
-                                || (u.getEspecialidade() != null &&
-                                u.getEspecialidade().toLowerCase().contains(filtro.toLowerCase()))) {
+
+                        if (filtroLower.isEmpty()) {
+                            lista.add(u);
+                            continue;
+                        }
+
+                        String nome = u.getNome() != null ? u.getNome().toLowerCase() : "";
+                        String especialidade = u.getEspecialidade() != null
+                                ? u.getEspecialidade().toLowerCase()
+                                : "";
+
+                        if (nome.contains(filtroLower) || especialidade.contains(filtroLower)) {
                             lista.add(u);
                         }
                     }
+
                     callback.onResult(lista);
                 })
-                .addOnFailureListener(e -> callback.onResult(new ArrayList<>()));
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Erro ao buscar médicos", e);
+                    callback.onResult(new ArrayList<>());
+                });
     }
 
     public void buscarPacientes(String filtro, OnUsuariosResult callback) {
@@ -275,23 +331,25 @@ public class FirebaseManager {
                 .addOnFailureListener(e -> callback.onResult(new ArrayList<>()));
     }
 
+    private String gerarAgendaId(String medicoId, String data, String hora) {
+        return medicoId + "_" + data + "_" + hora.replace(":", "-");
+    }
+
     private void marcarSlotIndisponivel(String medicoId, String data, String hora) {
         Map<String, Object> map = new HashMap<>();
         map.put("medico_id", medicoId);
         map.put("data", data);
         map.put("hora", hora);
-        db.collection(COL_AGENDA).add(map);
+
+        db.collection(COL_AGENDA)
+                .document(gerarAgendaId(medicoId, data, hora))
+                .set(map);
     }
 
     private void marcarSlotDisponivel(String medicoId, String data, String hora) {
         db.collection(COL_AGENDA)
-                .whereEqualTo("medico_id", medicoId)
-                .whereEqualTo("data", data)
-                .whereEqualTo("hora", hora)
-                .get()
-                .addOnSuccessListener(snap -> {
-                    for (QueryDocumentSnapshot doc : snap) doc.getReference().delete();
-                });
+                .document(gerarAgendaId(medicoId, data, hora))
+                .delete();
     }
 
     public void buscarSlotsAgenda(String medicoId, String data, OnSlotsResult callback) {
@@ -340,10 +398,15 @@ public class FirebaseManager {
                         porData.get(data).add(Boolean.TRUE.equals(disp));
                     }
                     List<String> disponiveis = new ArrayList<>();
-                    List<String> ocupadas    = new ArrayList<>();
+                    List<String> ocupadas = new ArrayList<>();
                     for (Map.Entry<String, List<Boolean>> entry : porData.entrySet()) {
                         boolean temLivre = false;
-                        for (Boolean b : entry.getValue()) { if (b) { temLivre = true; break; } }
+                        for (Boolean b : entry.getValue()) {
+                            if (b) {
+                                temLivre = true;
+                                break;
+                            }
+                        }
                         (temLivre ? disponiveis : ocupadas).add(entry.getKey());
                     }
                     callback.onResult(disponiveis, ocupadas);
@@ -465,8 +528,14 @@ public class FirebaseManager {
 //                    callback.onResult(new ArrayList<>());
 //                });
 
+        if (valor == null || valor.isEmpty()) {
+            callback.onResult(new ArrayList<>());
+            return;
+        }
+
         db.collection(COL_CONSULTAS)
                 .whereEqualTo(campo, valor)
+                .limit(50)
                 .get()
                 .addOnSuccessListener(snap -> {
                     List<Consulta> lista = new ArrayList<>();
@@ -475,12 +544,11 @@ public class FirebaseManager {
                         lista.add(docToConsulta(doc));
                     }
 
-                    if (lista.isEmpty()) {
-                        callback.onResult(lista);
-                        return;
-                    }
-
-                    lista.sort((c1, c2) -> c2.getData().compareTo(c1.getData()));
+                    lista.sort((c1, c2) -> {
+                        String d1 = c1.getData() != null ? c1.getData() : "";
+                        String d2 = c2.getData() != null ? c2.getData() : "";
+                        return d2.compareTo(d1);
+                    });
 
                     callback.onResult(lista);
                 })
@@ -490,17 +558,41 @@ public class FirebaseManager {
                 });
     }
 
+    public ListenerRegistration ouvirConsultasConfirmadasMedico(String medicoUsername, OnConsultasResult callback) {
+        if (medicoUsername == null || medicoUsername.isEmpty()) {
+            callback.onResult(new ArrayList<>());
+            return null;
+        }
+
+        return db.collection(COL_CONSULTAS)
+                .whereEqualTo("medico_id", medicoUsername)
+                .whereEqualTo("status", "confirmada")
+                .addSnapshotListener((snap, error) -> {
+                    if (error != null || snap == null) {
+                        Log.e("CONSULTA_NOTIF", "Erro ao ouvir consultas confirmadas", error);
+                        callback.onResult(new ArrayList<>());
+                        return;
+                    }
+
+                    List<Consulta> novas = new ArrayList<>();
+
+                    for (DocumentChange dc : snap.getDocumentChanges()) {
+                        if (dc.getType() == DocumentChange.Type.ADDED ||
+                                dc.getType() == DocumentChange.Type.MODIFIED) {
+
+                            novas.add(docToConsulta(dc.getDocument()));
+                        }
+                    }
+
+                    callback.onResult(novas);
+                });
+    }
+
     // =========================================================================
     // PAGAMENTOS
     // =========================================================================
 
-    /**
-     * Registra (ou substitui) pagamento.
-     * Usa consultaId como ID do documento para garantir unicidade.
-     *
-     * FIX: o campo "consulta_id" é explicitamente salvo no map para que
-     * docToPagamento() possa lê-lo; o doc.getId() é o fallback secundário.
-     */
+
     public void registrarPagamento(Pagamento p, OnIdResult onSuccess, OnError onError) {
         Map<String, Object> map = pagamentoToMap(p);   // já inclui "consulta_id"
         String docId = p.getConsultaId() != null ? p.getConsultaId() : db.collection(COL_PAGAMENTOS).document().getId();
@@ -523,11 +615,7 @@ public class FirebaseManager {
                 .addOnFailureListener(e -> callback.onResult(false));
     }
 
-    /**
-     * Busca pagamento pelo ID da consulta.
-     * O documento no Firestore tem o consultaId como seu próprio ID,
-     * mas também armazena o campo "consulta_id" — lemos ambos para robustez.
-     */
+
     public void buscarPagamentoPorConsulta(String consultaId, OnPagamentoResult callback) {
         if (consultaId == null || consultaId.isEmpty()) {
             callback.onResult(null);
@@ -554,18 +642,117 @@ public class FirebaseManager {
     // MENSAGENS
     // =========================================================================
 
+    private String gerarChatId(String user1, String user2) {
+        if (user1.compareTo(user2) < 0) {
+            return user1 + "_" + user2;
+        } else {
+            return user2 + "_" + user1;
+        }
+    }
+
+    public ListenerRegistration ouvirConversa(
+            String user1,
+            String user2,
+            OnMensagensResult callback
+    ) {
+        final List<Mensagem>[] lista1 = new List[]{new ArrayList<>()};
+        final List<Mensagem>[] lista2 = new List[]{new ArrayList<>()};
+
+        ListenerRegistration l1 = db.collection(COL_MENSAGENS)
+                .whereEqualTo("remetente_id", user1)
+                .whereEqualTo("destinatario_id", user2)
+                .addSnapshotListener((snap, error) -> {
+                    if (error != null || snap == null) {
+                        callback.onResult(new ArrayList<>());
+                        return;
+                    }
+
+                    List<Mensagem> temp = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : snap.getDocuments()) {
+                        temp.add(docToMensagem(doc));
+                    }
+
+                    lista1[0] = temp;
+
+                    List<Mensagem> todas = new ArrayList<>();
+                    todas.addAll(lista1[0]);
+                    todas.addAll(lista2[0]);
+
+                    todas.sort((a, b) -> {
+                        String da = a.getDataHora() != null ? a.getDataHora() : "";
+                        String db = b.getDataHora() != null ? b.getDataHora() : "";
+                        return da.compareTo(db);
+                    });
+
+                    callback.onResult(todas);
+                });
+
+        ListenerRegistration l2 = db.collection(COL_MENSAGENS)
+                .whereEqualTo("remetente_id", user2)
+                .whereEqualTo("destinatario_id", user1)
+                .addSnapshotListener((snap, error) -> {
+                    if (error != null || snap == null) {
+                        callback.onResult(new ArrayList<>());
+                        return;
+                    }
+
+                    List<Mensagem> temp = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : snap.getDocuments()) {
+                        temp.add(docToMensagem(doc));
+                    }
+
+                    lista2[0] = temp;
+
+                    List<Mensagem> todas = new ArrayList<>();
+                    todas.addAll(lista1[0]);
+                    todas.addAll(lista2[0]);
+
+                    todas.sort((a, b) -> {
+                        String da = a.getDataHora() != null ? a.getDataHora() : "";
+                        String db = b.getDataHora() != null ? b.getDataHora() : "";
+                        return da.compareTo(db);
+                    });
+
+                    callback.onResult(todas);
+                });
+
+        return () -> {
+            l1.remove();
+            l2.remove();
+        };
+    }
+
     public void enviarMensagem(Mensagem m, OnIdResult onSuccess, OnError onError) {
         Map<String, Object> map = new HashMap<>();
-        map.put("remetente_id",    m.getRemetenteId());
-        map.put("destinatario_id", m.getDestinatarioId());
-        map.put("texto",           m.getTexto());
-        map.put("data_hora",       m.getDataHora());
-        map.put("lida",            false);
 
-        db.collection(COL_MENSAGENS).add(map)
+        map.put("chat_id", gerarChatId(m.getRemetenteId(), m.getDestinatarioId()));
+        map.put("remetente_id", m.getRemetenteId());
+        map.put("destinatario_id", m.getDestinatarioId());
+        map.put("texto", m.getTexto());
+        map.put("data_hora", m.getDataHora());
+        map.put("lida", false);
+
+        db.collection(COL_MENSAGENS)
+                .add(map)
                 .addOnSuccessListener(ref -> onSuccess.onResult(ref.getId()))
                 .addOnFailureListener(onError::onError);
     }
+
+//    @Deprecated
+//    public void enviarMensagem(Mensagem m, OnIdResult onSuccess, OnError onError) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("remetente_id",    m.getRemetenteId());
+//        map.put("destinatario_id", m.getDestinatarioId());
+//        map.put("texto",           m.getTexto());
+//        map.put("data_hora",       m.getDataHora());
+//        map.put("lida",            false);
+//
+//        db.collection(COL_MENSAGENS).add(map)
+//                .addOnSuccessListener(ref -> onSuccess.onResult(ref.getId()))
+//                .addOnFailureListener(onError::onError);
+//    }
 
     public void buscarConversa(String user1, String user2, OnMensagensResult callback) {
         db.collection(COL_MENSAGENS)
@@ -581,7 +768,8 @@ public class FirebaseManager {
                             .whereEqualTo("destinatario_id", user1)
                             .get()
                             .addOnSuccessListener(snap2 -> {
-                                for (DocumentSnapshot doc : snap2.getDocuments()) lista.add(docToMensagem(doc));
+                                for (DocumentSnapshot doc : snap2.getDocuments())
+                                    lista.add(docToMensagem(doc));
                                 lista.sort((a, b) -> a.getDataHora().compareTo(b.getDataHora()));
                                 callback.onResult(lista);
                             })
@@ -634,30 +822,51 @@ public class FirebaseManager {
                 });
     }
 
+    public ListenerRegistration ouvirNotificacoesMensagens(
+            String username,
+            OnMensagensResult callback
+    ) {
+        return db.collection(COL_MENSAGENS)
+                .whereEqualTo("destinatario_id", username)
+                .whereEqualTo("lida", false)
+                .addSnapshotListener((snap, error) -> {
+                    if (error != null || snap == null) {
+                        callback.onResult(new ArrayList<>());
+                        return;
+                    }
+
+                    List<Mensagem> novas = new ArrayList<>();
+
+                    for (DocumentChange dc : snap.getDocumentChanges()) {
+                        if (dc.getType() == DocumentChange.Type.ADDED) {
+                            novas.add(docToMensagem(dc.getDocument()));
+                        }
+                    }
+
+                    callback.onResult(novas);
+                });
+    }
+
     // =========================================================================
     // HISTÓRICO MÉDICO
     // =========================================================================
 
     public void registrarHistorico(HistoricoMedico h, OnIdResult onSuccess, OnError onError) {
         Map<String, Object> map = new HashMap<>();
-        map.put("paciente_id",  h.getPacienteId());
-        map.put("medico_id",    h.getMedicoId());
-        map.put("nome_medico",  h.getNomeMedico());   // campo desnormalizado para evitar join
-        map.put("data",         h.getData());
-        map.put("diagnostico",  h.getDiagnostico());
-        map.put("observacoes",  h.getObservacoes());
-        map.put("prescricao",   h.getPrescricao());
+        map.put("paciente_id", h.getPacienteId());
+        map.put("medico_id", h.getMedicoId());
+        map.put("nome_medico", h.getNomeMedico());   // campo desnormalizado para evitar join
+        map.put("data", h.getData());
+        map.put("diagnostico", h.getDiagnostico());
+        map.put("observacoes", h.getObservacoes());
+        map.put("prescricao", h.getPrescricao());
 
         db.collection(COL_HISTORICO).add(map)
                 .addOnSuccessListener(ref -> onSuccess.onResult(ref.getId()))
                 .addOnFailureListener(onError::onError);
     }
 
-    /**
-     * Busca histórico do paciente e resolve o nome do médico.
-     * Estratégia: lê o campo "nome_medico" salvo no documento (desnormalizado).
-     * Se ausente (documentos antigos), faz join com a coleção usuarios.
-     */
+
     public void buscarHistoricoPorPaciente(String pacienteUsername, OnHistoricoResult callback) {
         db.collection(COL_HISTORICO)
                 .whereEqualTo("paciente_id", pacienteUsername)
@@ -720,17 +929,18 @@ public class FirebaseManager {
 
     private Map<String, Object> usuarioToMap(Usuario u) {
         Map<String, Object> map = new HashMap<>();
-        map.put("nome",          u.getNome());
-        map.put("email",         u.getEmail());
-        map.put("senha",         u.getSenha());
-        map.put("tipo",          u.getTipo());
-        map.put("cpf",           u.getCpf());
-        map.put("username",      u.getUsername());
-        map.put("genero",        u.getGenero());
+        map.put("nome", u.getNome());
+        map.put("email", u.getEmail());
+        map.put("senha", u.getSenha());
+        map.put("tipo", u.getTipo());
+        map.put("cpf", u.getCpf());
+        map.put("username", u.getUsername());
+        map.put("genero", u.getGenero());
         map.put("especialidade", u.getEspecialidade());
-        map.put("descricao",     u.getDescricao());
-        map.put("crm",           u.getCRM());
-        map.put("foto_perfil",   u.getFotoPerfil());
+        map.put("descricao", u.getDescricao());
+        map.put("crm", u.getCRM());
+        map.put("foto_perfil", u.getFotoPerfil());
+        map.put("aprovado", u.getAprovado());
         return map;
     }
 
@@ -747,18 +957,19 @@ public class FirebaseManager {
         u.setDescricao(doc.getString("descricao"));
         u.setCRM(doc.getString("crm"));
         u.setFotoPerfil(doc.getString("foto_perfil"));
+        u.setAprovado(doc.getBoolean("aprovado"));
         return u;
     }
 
     private Map<String, Object> consultaToMap(Consulta c) {
         Map<String, Object> map = new HashMap<>();
-        map.put("paciente_id",  c.getPacienteId());
-        map.put("medico_id",    c.getMedicoId());
-        map.put("data",         c.getData());
-        map.put("hora",         c.getHora());
-        map.put("status",       c.getStatus());
-        map.put("pagamento",    c.getPagamentoTipo());
-        map.put("observacoes",  c.getObservacoes());
+        map.put("paciente_id", c.getPacienteId());
+        map.put("medico_id", c.getMedicoId());
+        map.put("data", c.getData());
+        map.put("hora", c.getHora());
+        map.put("status", c.getStatus());
+        map.put("pagamento", c.getPagamentoTipo());
+        map.put("observacoes", c.getObservacoes());
         return map;
     }
 
@@ -777,21 +988,17 @@ public class FirebaseManager {
 
     private Map<String, Object> pagamentoToMap(Pagamento p) {
         Map<String, Object> map = new HashMap<>();
-        map.put("consulta_id",       p.getConsultaId());   // campo explícito no documento
-        map.put("metodo",            p.getMetodo());
-        map.put("status",            p.getStatus());
-        map.put("mp_payment_id",     p.getMpPaymentId());
-        map.put("mp_preference_id",  p.getMpPreferenceId());
-        map.put("valor",             p.getValor());
-        map.put("data_hora",         p.getDataHora());
+        map.put("consulta_id", p.getConsultaId());   // campo explícito no documento
+        map.put("metodo", p.getMetodo());
+        map.put("status", p.getStatus());
+        map.put("mp_payment_id", p.getMpPaymentId());
+        map.put("mp_preference_id", p.getMpPreferenceId());
+        map.put("valor", p.getValor());
+        map.put("data_hora", p.getDataHora());
         return map;
     }
 
-    /**
-     * FIX: consultaId é lido do campo "consulta_id" no documento.
-     * Se ausente (documentos antigos), usa doc.getId() como fallback,
-     * pois registrarPagamento usa o consultaId como ID do documento.
-     */
+
     private Pagamento docToPagamento(DocumentSnapshot doc) {
         Pagamento p = new Pagamento();
         String consultaId = doc.getString("consulta_id");

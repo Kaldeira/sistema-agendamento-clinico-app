@@ -27,52 +27,52 @@
     <style name="ModernDropdown"
         parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-        <!-- Formato -->
+
         <item name="boxBackgroundMode">outline</item>
 
-        <!-- Cantos -->
+
         <item name="boxCornerRadiusTopStart">14dp</item>
         <item name="boxCornerRadiusTopEnd">14dp</item>
         <item name="boxCornerRadiusBottomStart">14dp</item>
         <item name="boxCornerRadiusBottomEnd">14dp</item>
 
-        <!-- Cores -->
+
         <item name="boxStrokeColor">@color/colorPrimary</item>
         <item name="android:textColorHint">#9E9E9E</item>
         <item name="hintTextColor">#9E9E9E</item>
 
-        <!-- Fundo -->
+
         <item name="boxBackgroundColor">#FAFAFA</item>
 
-        <!-- Borda -->
+
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">2dp</item>
 
-        <!-- Cor da seta -->
+
         <item name="endIconTint">@color/colorPrimary</item>
 
     </style>
 
     <style name="ModernTextField" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-        <!-- Formato -->
+
         <item name="boxBackgroundMode">outline</item>
 
-        <!-- Cantos arredondados -->
+
         <item name="boxCornerRadiusTopStart">14dp</item>
         <item name="boxCornerRadiusTopEnd">14dp</item>
         <item name="boxCornerRadiusBottomStart">14dp</item>
         <item name="boxCornerRadiusBottomEnd">14dp</item>
 
-        <!-- Cores -->
+
         <item name="boxStrokeColor">@color/colorPrimary</item>
         <item name="android:textColorHint">#9E9E9E</item>
         <item name="hintTextColor">#9E9E9E</item>
 
-        <!-- Fundo -->
+
         <item name="boxBackgroundColor">#FAFAFA</item>
 
-        <!-- Borda -->
+
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">2dp</item>
 

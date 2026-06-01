@@ -49,6 +49,7 @@ public class ConsultaMedicoAdapter extends RecyclerView.Adapter<ConsultaMedicoAd
         h.tvStatus.setText("Status: " + c.getStatusLabel());
         h.tvPagamento.setText("Observação: " + (c.getObservacoes() != null ? c.getObservacoes() : "Nenhuma!"));
 
+
         boolean pendente = "pendente".equals(c.getStatus());
         h.btnConfirmar.setVisibility(pendente ? View.VISIBLE : View.GONE);
         h.btnCancelar.setVisibility(pendente ? View.VISIBLE : View.GONE);

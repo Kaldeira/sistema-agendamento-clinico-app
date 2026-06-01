@@ -34,10 +34,10 @@ public class AgendaMedicaActivity extends AppCompatActivity {
     private String medicoUsername;
     private SlotAgendaAdapter slotAdapter;
 
-    // Calendário
+
     private Calendar calAtual = Calendar.getInstance();
     private Set<String> datasDisponiveis = new HashSet<>();
-    private Set<String> datasOcupadas   = new HashSet<>(); // todas ocupadas (nenhum slot livre)
+    private Set<String> datasOcupadas   = new HashSet<>();
     private String dataSelecionada = null;
 
     private static final SimpleDateFormat SDF_KEY  = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -66,8 +66,6 @@ public class AgendaMedicaActivity extends AppCompatActivity {
         carregarDatasDoFirebase();
     }
 
-    // ─── Setup ───────────────────────────────────────────────────────────────
-
     private void configurarRecycler() {
         slotAdapter = new SlotAgendaAdapter((data, hora) -> {
             Intent intent = new Intent(this, AgendarConsultaActivity.class);
@@ -95,12 +93,7 @@ public class AgendaMedicaActivity extends AppCompatActivity {
         });
     }
 
-    // ─── Firebase ────────────────────────────────────────────────────────────
 
-    /**
-     * Carrega do Firebase quais datas têm ao menos 1 slot disponível
-     * e quais estão completamente ocupadas.
-     */
     private void carregarDatasDoFirebase() {
 
         fb.buscarDatasOcupadas(
@@ -152,9 +145,6 @@ public class AgendaMedicaActivity extends AppCompatActivity {
                     });
                 });
     }
-
-    // ─── Calendário ──────────────────────────────────────────────────────────
-
     private void renderizarCalendario() {
         binding.tvMesAno.setText(capitalize(SDF_MES.format(calAtual.getTime())));
         binding.gridCalendario.removeAllViews();
@@ -165,24 +155,22 @@ public class AgendaMedicaActivity extends AppCompatActivity {
         int diaSemanaInicio = c.get(Calendar.DAY_OF_WEEK) - 1;
         int totalDias = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        // Limpa hora do calendário atual
+
         Calendar hoje = Calendar.getInstance();
         hoje.set(Calendar.HOUR_OF_DAY, 0);
         hoje.set(Calendar.MINUTE, 0);
         hoje.set(Calendar.SECOND, 0);
         hoje.set(Calendar.MILLISECOND, 0);
 
-        // Espaços vazios antes do primeiro dia
+
         for (int i = 0; i < diaSemanaInicio; i++) {
             adicionarCelulaVazia();
         }
 
-        // Dias do mês
         for (int dia = 1; dia <= totalDias; dia++) {
 
             c.set(Calendar.DAY_OF_MONTH, dia);
 
-            // Limpa hora do dia sendo renderizado
             c.set(Calendar.HOUR_OF_DAY, 0);
             c.set(Calendar.MINUTE, 0);
             c.set(Calendar.SECOND, 0);
@@ -192,12 +180,6 @@ public class AgendaMedicaActivity extends AppCompatActivity {
 
             boolean passado = c.before(hoje);
 
-            /*
-             * NOVA LÓGICA:
-             *
-             * Se NÃO estiver nas datas ocupadas,
-             * então considera disponível.
-             */
 
             boolean ocupado = datasOcupadas.contains(chave);
 
@@ -242,12 +224,12 @@ public class AgendaMedicaActivity extends AppCompatActivity {
         tv.setLayoutParams(lp);
 
         if (selecionado) {
-            // Dia selecionado — destaque azul
+
             tv.setBackgroundColor(0xFF1565C0);
             tv.setTextColor(Color.WHITE);
             tv.setTypeface(null, Typeface.BOLD);
         } else if (passado) {
-            // Passado — cinza claro
+
             tv.setTextColor(0xFFCCCCCC);
         } else if (disponivel) {
             tv.setBackgroundColor(0xFFE8F5E9);
@@ -261,11 +243,9 @@ public class AgendaMedicaActivity extends AppCompatActivity {
                 selecionarDia(chave, tv);
             });
         } else if (ocupado) {
-            // Totalmente ocupado — vermelho claro
             tv.setBackgroundColor(0xFFFFEBEE);
             tv.setTextColor(0xFFC62828);
         } else {
-            // Sem agenda cadastrada — neutro
             tv.setTextColor(0xFF999999);
         }
 
@@ -275,7 +255,6 @@ public class AgendaMedicaActivity extends AppCompatActivity {
     private void selecionarDia(String chave, TextView tvClicado) {
         dataSelecionada = chave;
 
-        // Atualiza o label
         try {
             java.util.Date d = SDF_KEY.parse(chave);
             binding.tvDataSelecionada.setText("Horários para " + SDF_EXIB.format(d));
@@ -284,14 +263,10 @@ public class AgendaMedicaActivity extends AppCompatActivity {
         }
         binding.tvDataSelecionada.setVisibility(View.VISIBLE);
 
-        // Re-renderiza calendário para marcar seleção visualmente
         renderizarCalendario();
 
-        // Carrega slots
         carregarSlots(chave);
     }
-
-    // ─── Helpers ─────────────────────────────────────────────────────────────
 
     private int dpToPx(int dp) {
         return Math.round(dp * getResources().getDisplayMetrics().density);

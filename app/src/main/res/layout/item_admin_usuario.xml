@@ -16,7 +16,7 @@
         android:padding="14dp"
         android:gravity="center_vertical">
 
-        <!-- Iniciais -->
+
         <TextView
             android:id="@+id/tvIniciais"
             android:layout_width="44dp"
@@ -28,7 +28,7 @@
             android:textColor="#FFFFFF"
             android:background="@drawable/circle_primary" />
 
-        <!-- Foto -->
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivFotoUser"
             android:layout_width="44dp"
@@ -38,7 +38,7 @@
             android:src="@drawable/bg_circle_image"
             app:shapeAppearanceOverlay="@style/CircleImage"/>
 
-        <!-- Info block -->
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -63,9 +63,18 @@
                 android:textSize="12sp"
                 android:textColor="#888888"
                 android:layout_marginTop="2dp" />
+            <TextView
+                android:id="@+id/tvAprovado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pendente Aprovação!"
+                android:textSize="12sp"
+                android:textColor="#FF0000"
+                android:layout_marginTop="2dp"
+                android:visibility="gone"/>
         </LinearLayout>
 
-        <!-- Action buttons -->
+
         <Button
             android:id="@+id/btnEditar"
             android:layout_width="wrap_content"
@@ -85,6 +94,7 @@
             android:paddingHorizontal="12dp"
             android:backgroundTint="#FFF3F3"
             android:textColor="#F44336" />
+
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

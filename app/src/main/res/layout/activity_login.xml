@@ -105,7 +105,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Home -->
+
         <LinearLayout
             android:id="@+id/navHome"
             android:layout_width="0dp"
@@ -128,7 +128,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Login -->
+
         <LinearLayout
             android:id="@+id/navLogin"
             android:layout_width="0dp"
@@ -152,7 +152,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Perfil -->
+
         <LinearLayout
             android:id="@+id/navPerfil"
             android:layout_width="0dp"
@@ -176,7 +176,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Chat -->
+
         <LinearLayout
             android:id="@+id/navChat"
             android:layout_width="0dp"
@@ -200,7 +200,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Consultas -->
+
         <LinearLayout
             android:id="@+id/navConsultas"
             android:layout_width="0dp"
@@ -247,7 +247,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Pacientes (médico) -->
+
         <LinearLayout
             android:id="@+id/navPacientes"
             android:layout_width="0dp"
@@ -271,7 +271,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <!-- Admin -->
+
         <LinearLayout
             android:id="@+id/navAdmin"
             android:layout_width="0dp"

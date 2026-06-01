@@ -87,14 +87,15 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // Usa a sobrecarga sem int para criar sessão com dados do Firebase
+
             session.criarSessao(
                     usuario.getNome(),
                     usuario.getTipo(),
                     usuario.getEmail(),
                     usuario.getFotoPerfil(),
                     usuario.getUsername(),
-                    usuario.getSenha()
+                    usuario.getSenha(),
+                    usuario.getAprovado()
             );
 
             runOnUiThread(this::goHome);

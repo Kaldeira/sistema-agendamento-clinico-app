@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.clinica.app.Activities.ChatActivity;
+import com.clinica.app.Controle.SessionManager;
 import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -58,7 +60,6 @@ public class MedicoCardAdapter extends RecyclerView.Adapter<MedicoCardAdapter.Vi
         h.tvNome.setText(prefixo + m.getNome());
         h.tvEspecialidade.setText(m.getEspecialidade());
 
-
         if (m.getFotoPerfil() != null && !m.getFotoPerfil().isEmpty()) {
 
             Glide.with(context)
@@ -85,11 +86,27 @@ public class MedicoCardAdapter extends RecyclerView.Adapter<MedicoCardAdapter.Vi
 
         h.itemView.setOnClickListener(v -> listener.onClick(m));
 
-       h.btnChat.setOnClickListener(v -> {
-           Context context = v.getContext();
+        h.btnChat.setOnClickListener(v -> {
+            Context context = v.getContext();
+            SessionManager session = new SessionManager(context);
+
+            if (!session.isLogado()) {
+                Toast.makeText(context, "Faça login para iniciar uma conversa.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!session.getAprovado()) {
+                Toast.makeText(context, "Sua conta ainda não foi aprovada.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (session.isMedico() && session.getUsername().equalsIgnoreCase(m.getUsername())) {
+                Toast.makeText(context, "Calma ae paizao!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             Intent intent = new Intent(context, ChatActivity.class);
-            intent.putExtra("destinatario_id", m.getId());
+            intent.putExtra("destinatario_id", m.getUsername());
             intent.putExtra("destinatario_username", m.getUsername());
             intent.putExtra("destinatario_nome", m.getNome());
             intent.putExtra("foto_perfil", m.getFotoPerfil());

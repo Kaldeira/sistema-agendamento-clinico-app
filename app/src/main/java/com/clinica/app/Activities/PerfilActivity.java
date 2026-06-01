@@ -1,6 +1,7 @@
 package com.clinica.app.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
@@ -24,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.clinica.app.Controle.FirebaseManager;
+import com.clinica.app.Controle.NotificacaoReceiver;
 import com.clinica.app.Controle.SessionManager;
 import com.clinica.app.Modelo.Usuario;
 import com.clinica.app.R;
@@ -137,10 +139,16 @@ public class PerfilActivity extends AppCompatActivity {
                 tvNome.setText(u.getNome());
                 etEmail.setText(u.getEmail());
                 etCpf.setText(u.getCpf());
-                tvTipo.setText(tipoLabel(u.getTipo()));
                 etUsername.setText(u.getUsername());
                 etUsername.setEnabled(false); // username é o ID do documento, não editável
                 etSenha.setText(u.getSenha());
+
+                if (u.isMedico() && !u.getAprovado()) {
+                    tvTipo.setText(tipoLabel(u.getTipo()) + " : Aguardando aprovação");
+                    tvTipo.setTextColor(Color.parseColor("#D32F2F"));
+                } else {
+                    tvTipo.setText(tipoLabel(u.getTipo()));
+                }
 
                 String genero = u.getGenero();
                 if (genero != null && !genero.isEmpty()) {
@@ -204,14 +212,15 @@ public class PerfilActivity extends AppCompatActivity {
 
         fb.atualizarUsuario(usuario, status -> {
             if (status) {
-                // Atualiza a sessão local com os novos dados
+
                 session.criarSessao(
                         usuario.getNome(),
                         usuario.getTipo(),
                         usuario.getEmail(),
                         usuario.getFotoPerfil(),
                         usuario.getUsername(),
-                        usuario.getSenha()
+                        usuario.getSenha(),
+                        usuario.getAprovado()
                 );
                 runOnUiThread(() ->
                         Snackbar.make(etNome, "✅ Perfil atualizado!", Snackbar.LENGTH_SHORT).show());
@@ -259,7 +268,7 @@ public class PerfilActivity extends AppCompatActivity {
             return;
         }
 
-        String apiKey = "abf4ebb66374e60e8a772ce90fb2ca3d";
+        String apiKey = this.getString(R.string.imgbb_api_key);
         String url    = "https://api.imgbb.com/1/upload?key=" + apiKey;
 
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -280,7 +289,8 @@ public class PerfilActivity extends AppCompatActivity {
                                         session.getEmail(),
                                         imageUrl,
                                         session.getUsername(),
-                                        session.getSenha()
+                                        session.getSenha(),
+                                        usuario.getAprovado()
                                 );
                                 runOnUiThread(() -> {
                                     Glide.with(this).load(imageUrl).circleCrop().into(ivFoto);
@@ -331,6 +341,7 @@ public class PerfilActivity extends AppCompatActivity {
 
     private void logout() {
         session.encerrarSessao();
+        NotificacaoReceiver.pararNotificacoesChat();
         Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

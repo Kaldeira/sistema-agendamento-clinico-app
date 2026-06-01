@@ -13,6 +13,7 @@ public class Usuario {
     private String genero;
     private String crm;
     private String username;
+    private boolean aprovado;
 
     public Usuario() {
     }
@@ -100,6 +101,13 @@ public class Usuario {
 
     public String getCRM(){
         return crm;
+    }
+
+    public boolean getAprovado() {
+        return aprovado;
+    }
+    public void setAprovado(boolean b) {
+        this.aprovado = b;
     }
 
     public void setCRM(String c){

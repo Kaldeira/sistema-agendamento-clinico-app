@@ -24,7 +24,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Pre-initialize DB singleton (creates tables / seeds data on first run)
+
         BancoDados.getInstance(this);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {

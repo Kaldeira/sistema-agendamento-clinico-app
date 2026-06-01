@@ -40,6 +40,7 @@
                     android:textColor="#1A1A2E" />
 
                 <TextView
+                    android:id="@+id/greetingMsg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Agende sua consulta hoje"
@@ -75,7 +76,7 @@
 
         </LinearLayout>
 
-        <!-- SEARCH BAR -->
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,7 +100,7 @@
     </LinearLayout>
 
 
-    <!-- DOCTOR GRID -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMedicos"
         android:layout_width="match_parent"
@@ -122,7 +123,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <!-- Home -->
+
         <LinearLayout
             android:id="@+id/navHome"
             android:layout_width="0dp"
@@ -145,7 +146,7 @@
                 android:textColor="@color/navbar_botao_ativado"/>
         </LinearLayout>
 
-        <!-- Login -->
+
         <LinearLayout
             android:id="@+id/navLogin"
             android:layout_width="0dp"
@@ -167,7 +168,7 @@
                 android:textColor="@color/navbar_botao_desativado" />
         </LinearLayout>
 
-        <!-- Perfil -->
+
         <LinearLayout
             android:id="@+id/navPerfil"
             android:layout_width="0dp"
@@ -189,7 +190,7 @@
                 android:textColor="@color/navbar_botao_desativado" />
         </LinearLayout>
 
-        <!-- Chat -->
+
         <LinearLayout
             android:id="@+id/navChat"
             android:layout_width="0dp"
@@ -211,7 +212,7 @@
                 android:textColor="@color/navbar_botao_desativado" />
         </LinearLayout>
 
-        <!-- Consultas -->
+
         <LinearLayout
             android:id="@+id/navConsultas"
             android:layout_width="0dp"

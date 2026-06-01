@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.clinica.app.Activities.*;
 import com.clinica.app.Controle.SessionManager;
@@ -73,6 +74,28 @@ public class BarraNavHelper {
             navHistorico.setVisibility(View.VISIBLE);
             navConsultas.setVisibility(View.VISIBLE);
             navChat.setVisibility(View.VISIBLE);
+
+            if (!session.getAprovado()) {
+                navHistorico.setOnClickListener(v -> Toast.makeText(
+                        activity,
+                        "Sua conta ainda não foi aprovada pelo administrador.",
+                        Toast.LENGTH_LONG
+                ).show());
+
+                navConsultas.setOnClickListener(v -> Toast.makeText(
+                        activity,
+                        "Sua conta ainda não foi aprovada pelo administrador.",
+                        Toast.LENGTH_LONG
+                ).show());
+
+                navChat.setOnClickListener(v -> Toast.makeText(
+                        activity,
+                        "Sua conta ainda não foi aprovada pelo administrador.",
+                        Toast.LENGTH_LONG
+                ).show());
+
+                return;
+            }
 
             navHistorico.setOnClickListener(v ->
                     navegar(activity, ProntuarioPacienteActivity.class));
