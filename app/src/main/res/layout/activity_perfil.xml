@@ -163,6 +163,22 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Digite uma nova senha para alterar"
+                        style="@style/ModernTextField"
+                        app:passwordToggleEnabled="true"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPassWord"
+                            style="@style/ModernEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
                         style="@style/ModernTextField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -175,22 +191,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="false"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Senha"
-                        style="@style/ModernTextField"
-                        app:passwordToggleEnabled="true"
-                        android:layout_marginBottom="12dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPassWord"
-                            style="@style/ModernEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPassword" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -333,9 +333,9 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home_menu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_home"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -357,9 +357,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_login"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_perfil"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -381,9 +381,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_person"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_perfil"
                 app:tint="@color/navbar_botao_ativado" />
 
             <TextView
@@ -405,9 +405,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_chat"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_chat"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -429,9 +429,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_consulta_menu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_consulta"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -452,9 +452,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_assignment"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_prontuario"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -476,9 +476,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_group"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_grupo"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -500,9 +500,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_admin"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_admin"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView

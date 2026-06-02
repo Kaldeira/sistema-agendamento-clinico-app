@@ -49,8 +49,10 @@ public class AdminUsuarioAdapter extends RecyclerView.Adapter<AdminUsuarioAdapte
         h.btnEditar.setOnClickListener(v -> onEdit.onEdit(u));
         h.btnDeletar.setOnClickListener(v -> onDelete.onDelete(u));
 
-        if (!u.getAprovado()) {
+        if (u.isMedico() && !u.getAprovado()) {
             h.tvAprovado.setVisibility(View.VISIBLE);
+        } else {
+            h.tvAprovado.setVisibility(View.GONE);
         }
 
         if (u.getFotoPerfil() != null && !u.getFotoPerfil().isEmpty()) {

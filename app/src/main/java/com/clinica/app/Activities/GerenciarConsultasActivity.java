@@ -88,6 +88,8 @@ public class GerenciarConsultasActivity extends AppCompatActivity {
 
             if (consultas == null || consultas.isEmpty()) {
                 runOnUiThread(() -> adapter.setLista(new ArrayList<>()));
+                TextView tvVazio = findViewById(R.id.tvVazio);
+                tvVazio.setVisibility(View.VISIBLE);
                 return;
             }
 

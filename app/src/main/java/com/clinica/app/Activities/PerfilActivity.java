@@ -141,7 +141,8 @@ public class PerfilActivity extends AppCompatActivity {
                 etCpf.setText(u.getCpf());
                 etUsername.setText(u.getUsername());
                 etUsername.setEnabled(false); // username é o ID do documento, não editável
-                etSenha.setText(u.getSenha());
+                etSenha.setText("");
+                //etSenha.setHint("Digite uma nova senha para alterar");
 
                 if (u.isMedico() && !u.getAprovado()) {
                     tvTipo.setText(tipoLabel(u.getTipo()) + " : Aguardando aprovação");
@@ -189,18 +190,31 @@ public class PerfilActivity extends AppCompatActivity {
         String novaSenha = etSenha.getText().toString().trim();
         String senhaAtual= session.getSenha();
 
+        boolean senhaAlterada = false;
+
         if (nome.isEmpty() || email.isEmpty()) {
             Snackbar.make(etNome, "Nome e e-mail são obrigatórios", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
-        if (!senhaAtual.equals(novaSenha)) {
-            if (novaSenha.isEmpty()) {
-                Snackbar.make(etSenha, "Senha não pode ser vazio!", Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-            usuario.setSenha(novaSenha);
+        if (novaSenha.length() >= 1 && novaSenha.length() <= 3) {
+            Snackbar.make(etSenha, "Senha deve ter mais de 3 caracteres!", Snackbar.LENGTH_SHORT).show();
         }
+
+        if (novaSenha.length() > 3) {
+            usuario.setSenha(novaSenha);
+            senhaAlterada = true;
+        }
+
+
+//        if (!senhaAtual.equals(novaSenha)) {
+//            if (novaSenha.isEmpty()) {
+//                Snackbar.make(etSenha, "Senha não pode ser vazio!", Snackbar.LENGTH_SHORT).show();
+//                return;
+//            }
+//            usuario.setSenha(novaSenha);
+//        }
+
 
         usuario.setNome(nome);
         usuario.setEmail(email);
@@ -231,7 +245,7 @@ public class PerfilActivity extends AppCompatActivity {
         });
     }
 
-    private void registerGalleryLauncher() {
+        private void registerGalleryLauncher() {
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {

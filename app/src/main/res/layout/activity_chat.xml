@@ -96,12 +96,15 @@
             android:layout_marginStart="8dp"
             android:backgroundTint="@color/colorPrimary"
             android:contentDescription="Enviar"
-            app:icon="@drawable/ic_botao_send"
+
+            app:icon="@drawable/ic_direct"
+            app:iconSize="22dp"
             app:iconTint="@android:color/white"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
+
             app:cornerRadius="24dp"
-            app:elevation="4dp"/>
+            app:elevation="4dp" />
 
 
     </LinearLayout>

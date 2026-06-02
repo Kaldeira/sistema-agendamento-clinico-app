@@ -8,6 +8,7 @@ import com.clinica.app.Modelo.Mensagem;
 import com.clinica.app.Modelo.Pagamento;
 import com.clinica.app.Modelo.Usuario;
 
+import com.clinica.app.Utils.HashHelper;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -188,21 +189,77 @@ public class FirebaseManager {
                 .addOnFailureListener(e -> callback.onResult(false));
     }
 
+//    public void login(String login, String senha, OnUsuarioResult callback) {
+//        db.collection(COL_USUARIOS)
+//                .whereEqualTo("email", login)
+//                .whereEqualTo("senha", senha)
+//                .get()
+//                .addOnSuccessListener(snap -> {
+//                    if (!snap.isEmpty()) {
+//                        callback.onResult(docToUsuario(snap.getDocuments().get(0)));
+//                        return;
+//                    }
+//                    db.collection(COL_USUARIOS).document(login).get()
+//                            .addOnSuccessListener(doc -> {
+//                                if (doc.exists()) {
+//                                    Usuario u = docToUsuario(doc);
+//                                    callback.onResult(senha.equals(u.getSenha()) ? u : null);
+//                                } else {
+//                                    callback.onResult(null);
+//                                }
+//                            })
+//                            .addOnFailureListener(e -> callback.onResult(null));
+//                })
+//                .addOnFailureListener(e -> callback.onResult(null));
+//    }
+
+    private boolean senhaConfere(String senhaDigitada, String senhaSalva) {
+        if (senhaDigitada == null || senhaSalva == null) {
+            return false;
+        }
+
+        if (HashHelper.validarSenha(senhaDigitada, senhaSalva)) {
+            return true;
+        }
+
+        // Compatibilidade com senhas antigas salvas sem hash
+        return senhaDigitada.equals(senhaSalva);
+    }
+
     public void login(String login, String senha, OnUsuarioResult callback) {
+
         db.collection(COL_USUARIOS)
                 .whereEqualTo("email", login)
-                .whereEqualTo("senha", senha)
                 .get()
                 .addOnSuccessListener(snap -> {
+
                     if (!snap.isEmpty()) {
-                        callback.onResult(docToUsuario(snap.getDocuments().get(0)));
+                        Usuario u = docToUsuario(snap.getDocuments().get(0));
+                        String senhaSalva = snap.getDocuments().get(0).getString("senha");
+
+                        if (senhaConfere(senha, senhaSalva)) {
+                            callback.onResult(u);
+                        } else {
+                            callback.onResult(null);
+                        }
+
                         return;
                     }
-                    db.collection(COL_USUARIOS).document(login).get()
+
+                    db.collection(COL_USUARIOS)
+                            .document(login)
+                            .get()
                             .addOnSuccessListener(doc -> {
-                                if (doc.exists()) {
-                                    Usuario u = docToUsuario(doc);
-                                    callback.onResult(senha.equals(u.getSenha()) ? u : null);
+                                if (!doc.exists()) {
+                                    callback.onResult(null);
+                                    return;
+                                }
+
+                                Usuario u = docToUsuario(doc);
+                                String senhaSalva = doc.getString("senha");
+
+                                if (HashHelper.validarSenha(senha, senhaSalva)) {
+                                    callback.onResult(u);
                                 } else {
                                     callback.onResult(null);
                                 }
@@ -931,7 +988,8 @@ public class FirebaseManager {
         Map<String, Object> map = new HashMap<>();
         map.put("nome", u.getNome());
         map.put("email", u.getEmail());
-        map.put("senha", u.getSenha());
+        //map.put("senha", u.getSenha());
+        map.put("senha", HashHelper.gerarHash(u.getSenha()));
         map.put("tipo", u.getTipo());
         map.put("cpf", u.getCpf());
         map.put("username", u.getUsername());

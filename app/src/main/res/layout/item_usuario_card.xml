@@ -85,11 +85,12 @@
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:backgroundTint="@color/white"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
             android:padding="10dp"
-            android:src="@drawable/ic_menu_chat"
-            app:tint="@color/colorPrimary" />
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_chat"
+            app:tint="@color/colorPrimary"
+            android:tooltipText="Enviar Mensagem!"/>
+
 
     </LinearLayout>
 

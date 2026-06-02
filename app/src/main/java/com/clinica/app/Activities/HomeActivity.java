@@ -26,6 +26,7 @@ import com.clinica.app.Controle.SessionManager;
 import com.clinica.app.DAO.MedicoCardAdapter;
 import com.clinica.app.R;
 import com.clinica.app.Utils.BarraNavHelper;
+import com.clinica.app.Utils.FirebaseSeeder;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -59,6 +60,16 @@ public class HomeActivity extends AppCompatActivity {
         fb = FirebaseManager.getInstance();
         NotificacaoReceiver.iniciarNotificacoesChat(this, fb, session);
         NotificacaoReceiver.iniciarNotificacoesConsultasMedico(this, fb, session);
+
+//        new FirebaseSeeder().popularBanco(sucesso -> {
+//            runOnUiThread(() -> {
+//                if (sucesso) {
+//                    Toast.makeText(this, "Firebase populado com sucesso!", Toast.LENGTH_LONG).show();
+//                } else {
+//                    Toast.makeText(this, "Erro ao popular Firebase.", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        });
 
         if (session.isMedico()) {
            TextView greetingMsg = findViewById(R.id.greetingMsg);

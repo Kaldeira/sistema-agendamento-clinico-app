@@ -77,7 +77,8 @@ public class PacienteCardAdapter extends RecyclerView.Adapter<PacienteCardAdapte
             Context context = v.getContext();
 
             Intent intent = new Intent(context, ChatActivity.class);
-            intent.putExtra("destinatario_id", m.getId());
+            intent.putExtra("destinatario_id", m.getUsername());
+            intent.putExtra("destinatario_username", m.getUsername());
             intent.putExtra("destinatario_nome", m.getNome());
             intent.putExtra("foto_perfil", m.getFotoPerfil());
             context.startActivity(intent);

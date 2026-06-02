@@ -264,9 +264,9 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home_menu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_home"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -288,9 +288,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_login"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_perfil"
                 app:tint="@color/navbar_botao_ativado" />
 
             <TextView
@@ -312,9 +312,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_person"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_perfil"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -336,9 +336,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_chat"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_chat"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -360,9 +360,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_consulta_menu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_consulta"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -383,9 +383,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_assignment"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_prontuario"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -407,9 +407,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_group"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_grupo"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
@@ -431,9 +431,9 @@
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu_admin"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_admin"
                 app:tint="@color/navbar_botao_desativado" />
 
             <TextView
