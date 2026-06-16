@@ -11,8 +11,10 @@ O objetivo principal é aplicar conceitos de desenvolvimento Android, banco de d
 ## 🛠️ Tecnologias utilizadas
 - Java
 - Android Studio
-- SQLite
+- Firebase
 - XML
+- MP API
+- ImgBB API
 
 ## 📌 Status
 Projeto em desenvolvimento acadêmico.
