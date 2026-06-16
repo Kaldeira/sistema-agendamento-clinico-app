@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -205,6 +206,7 @@ public class PagamentoActivity extends AppCompatActivity {
             MercadoPagoService.PreferenceResult result =
                     service.criarPreferencia(consultaId, desc, 1, total);
             String url = service.resolverUrlPagamento(result);
+            Log.d("MercadoPago", "URL resolvida: " + url);
 
             if (result.sucesso() && result.preferenceId != null)
                 registrarPagamento(Pagamento.METODO_CARTAO, Pagamento.STATUS_PENDENTE,
@@ -212,9 +214,11 @@ public class PagamentoActivity extends AppCompatActivity {
 
             mainHandler.post(() -> {
                 if (result.sucesso() && url != null && !url.isEmpty()) {
+                    Log.d("MercadoPago", "URL sucesso: " + url);
                     abrirPagamentoMercadoPago(url);
                    // abrirCheckoutMP(url);
                 } else {
+                    Log.d("MercadoPago", "URL inválida: " + url);
                     mostrarTela(stateSelecao);
                     String msg = result.erro != null ? result.erro : "URL inválida";
                     Snackbar.make(stateSelecao, "Erro MP: " + msg, Snackbar.LENGTH_LONG).show();
@@ -232,9 +236,12 @@ public class PagamentoActivity extends AppCompatActivity {
     }
 
     private void processarRetornoMP(String url) {
+        Log.d("MercadoPago", "URL recebida: " + url);
         Uri uri     = Uri.parse(url);
         String tipo = uri.getLastPathSegment();
         String payId = uri.getQueryParameter("payment_id");
+        //aqui o android vai entregar a URL dentro do Intent
+        //aqui deve retornar clinicaapp://pagamento/aprovado?payment_id=123456789&status=approved
 
         String status = "sucesso".equals(tipo) || "approved".equals(tipo)
                 ? Pagamento.STATUS_APROVADO

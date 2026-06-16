@@ -144,7 +144,7 @@ public class NotificacaoReceiver extends BroadcastReceiver {
         Context appContext = context.getApplicationContext();
 
         primeiraCarga = true;
-
+//listener registration
         chatListener = fb.ouvirNotificacoesMensagens(
                 session.getUsername(),
                 mensagens -> {
@@ -220,7 +220,7 @@ public class NotificacaoReceiver extends BroadcastReceiver {
         Context appContext = context.getApplicationContext();
 
         primeiraCargaConsultas = true;
-
+//listener registration
         consultasListener = fb.ouvirConsultasConfirmadasMedico(
                 session.getUsername(),
                 consultas -> {

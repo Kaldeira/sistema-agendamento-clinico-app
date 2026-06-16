@@ -60,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
         fb = FirebaseManager.getInstance();
         NotificacaoReceiver.iniciarNotificacoesChat(this, fb, session);
         NotificacaoReceiver.iniciarNotificacoesConsultasMedico(this, fb, session);
+        //aqui cria um ListenerRegistration no Firebase que executa um evento quando há mudanças no banco
 
 //        new FirebaseSeeder().popularBanco(sucesso -> {
 //            runOnUiThread(() -> {

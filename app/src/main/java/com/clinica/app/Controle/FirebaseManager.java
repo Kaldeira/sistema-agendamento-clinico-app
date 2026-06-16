@@ -247,7 +247,7 @@ public class FirebaseManager {
                     }
 
                     db.collection(COL_USUARIOS)
-                            .document(login)
+                            .document(login)//tenta achar pelo username, sendo que o username é o ID
                             .get()
                             .addOnSuccessListener(doc -> {
                                 if (!doc.exists()) {

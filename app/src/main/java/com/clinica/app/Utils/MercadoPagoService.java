@@ -81,7 +81,7 @@ public class MercadoPagoService {
             //criaçao do link de pagamento
             JSONObject item = new JSONObject();
             item.put("id",         consultaId); // qual pagamento de qual consulta
-            item.put("title",       descricao);  //d escricao do produto
+            item.put("title",       descricao);  // descricao do produto
             item.put("quantity",    quantidade); // quantidade
             item.put("unit_price",  valor); // valor
             item.put("currency_id", "BRL"); // moeda
@@ -130,7 +130,7 @@ public class MercadoPagoService {
 
     public String resolverUrlPagamento(PreferenceResult result) {
         if (result == null || !result.sucesso()) return null;
-        String url = isSandbox ? result.initPointSandbox : result.initPoint;
+        String url = isSandbox ? result.initPointSandbox : result.initPoint; //sandbox é o modo de teste
         return (url != null && !url.isEmpty()) ? url : result.initPoint;
     }
 
